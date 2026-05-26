@@ -1,7 +1,16 @@
 import axios from "axios";
 
+/**
+ * In development, Vite proxies /api → localhost:5000 (vite.config.js).
+ * In production, VITE_API_URL must be set to the deployed backend URL
+ * e.g. https://mediflow-api.onrender.com
+ */
+const BASE_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api/v1`
+  : "/api/v1";
+
 const api = axios.create({
-  baseURL: "/api/v1",
+  baseURL: BASE_URL,
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });
@@ -16,36 +25,21 @@ api.interceptors.response.use(
 
 // ─── Doctor API ───────────────────────────────────────────────────────────────
 export const adminDoctorAPI = {
-  /** GET /doctors – all doctors (admin sees unverified too) */
   getAll:   (params) => api.get("/doctors", { params }),
-
-  /** GET /doctors/:id */
-  getById:  (id) => api.get(`/doctors/${id}`),
-
-  /** POST /doctors – multipart/form-data */
+  getById:  (id)     => api.get(`/doctors/${id}`),
   add: (data) =>
     api.post("/doctors", data, { headers: { "Content-Type": "multipart/form-data" } }),
-
-  /** PATCH /doctors/:id – multipart/form-data (avatar optional) */
   update: (id, data) => {
     const isFormData = data instanceof FormData;
     return api.patch(`/doctors/${id}`, data, {
       headers: isFormData ? { "Content-Type": "multipart/form-data" } : {},
     });
   },
-
-  /** PATCH /doctors/:id/availability */
   updateAvailability: (id, slots) =>
     api.patch(`/doctors/${id}/availability`, { availableSlots: slots }),
-
-  /** PATCH /doctors/:id/verify */
-  verify: (id) => api.patch(`/doctors/${id}/verify`),
-
-  /** DELETE /doctors/:id */
-  delete: (id) => api.delete(`/doctors/${id}`),
-
-  /** GET /doctors/admin/stats */
-  getStats: () => api.get("/doctors/admin/stats"),
+  verify:   (id) => api.patch(`/doctors/${id}/verify`),
+  delete:   (id) => api.delete(`/doctors/${id}`),
+  getStats: ()   => api.get("/doctors/admin/stats"),
 };
 
 // ─── Appointment API ──────────────────────────────────────────────────────────
@@ -57,9 +51,9 @@ export const adminAppointmentAPI = {
 
 // ─── Message API ──────────────────────────────────────────────────────────────
 export const adminMessageAPI = {
-  getAll:   ()    => api.get("/messages"),
-  markRead: (id)  => api.patch(`/messages/${id}/read`),
-  delete:   (id)  => api.delete(`/messages/${id}`),
+  getAll:   ()   => api.get("/messages"),
+  markRead: (id) => api.patch(`/messages/${id}/read`),
+  delete:   (id) => api.delete(`/messages/${id}`),
 };
 
 // ─── Department API ───────────────────────────────────────────────────────────
@@ -72,9 +66,9 @@ export const adminDepartmentAPI = {
 
 // ─── User API ─────────────────────────────────────────────────────────────────
 export const adminUserAPI = {
-  getAll:     ()    => api.get("/users"),
-  deactivate: (id)  => api.patch(`/users/${id}/deactivate`),
-  delete:     (id)  => api.delete(`/users/${id}`),
+  getAll:     ()   => api.get("/users"),
+  deactivate: (id) => api.patch(`/users/${id}/deactivate`),
+  delete:     (id) => api.delete(`/users/${id}`),
 };
 
 export default api;

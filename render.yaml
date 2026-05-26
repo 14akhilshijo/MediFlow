@@ -1,0 +1,66 @@
+# render.yaml – One-click deploy for MediFlow on Render.com
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  # ── Backend API ─────────────────────────────────────────────────────────────
+  - type: web
+    name: mediflow-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        sync: false          # set manually in Render dashboard
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: JWT_EXPIRES
+        value: 7d
+      - key: COOKIE_EXPIRE
+        value: 7
+      - key: ADMIN_SECRET_KEY
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false          # e.g. https://mediflow-client.netlify.app
+      - key: ADMIN_URL
+        sync: false          # e.g. https://mediflow-admin.netlify.app
+
+  # ── Patient Client ───────────────────────────────────────────────────────────
+  - type: web
+    name: mediflow-client
+    runtime: static
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false          # e.g. https://mediflow-api.onrender.com
+
+  # ── Admin Dashboard ──────────────────────────────────────────────────────────
+  - type: web
+    name: mediflow-admin
+    runtime: static
+    rootDir: admin
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false          # e.g. https://mediflow-api.onrender.com
