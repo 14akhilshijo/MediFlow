@@ -1,16 +1,16 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
+import api from "../services/adminApi.js";
 
 const AdminAuthContext = createContext(null);
 
 export const AdminAuthProvider = ({ children }) => {
-  const [admin, setAdmin] = useState(null);
+  const [admin, setAdmin]     = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAdmin = async () => {
       try {
-        const { data } = await axios.get("/api/v1/auth/me", { withCredentials: true });
+        const { data } = await api.get("/auth/me");
         if (data.user?.role === "Admin") {
           setAdmin(data.user);
         } else {
@@ -26,18 +26,17 @@ export const AdminAuthProvider = ({ children }) => {
   }, []);
 
   const login = async (credentials) => {
-    const { data } = await axios.post(
-      "/api/v1/auth/login",
-      { ...credentials, role: "Admin" },
-      { withCredentials: true }
-    );
+    const { data } = await api.post("/auth/login", {
+      ...credentials,
+      role: "Admin",
+    });
     if (data.user?.role !== "Admin") throw new Error("Access denied. Admins only.");
     setAdmin(data.user);
     return data;
   };
 
   const logout = async () => {
-    await axios.get("/api/v1/auth/logout", { withCredentials: true });
+    await api.get("/auth/logout");
     setAdmin(null);
   };
 
