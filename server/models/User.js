@@ -109,7 +109,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // ─── Indexes ──────────────────────────────────────────────────────────────────
-userSchema.index({ email: 1 });
+// email index is already created by unique:true on the field — no need to repeat
 userSchema.index({ role: 1, isActive: 1 });
 
 // ─── Virtuals ─────────────────────────────────────────────────────────────────
