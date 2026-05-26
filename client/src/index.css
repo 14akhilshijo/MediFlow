@@ -1,0 +1,145 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base ─────────────────────────────────────────────────────────────────── */
+@layer base {
+  * { @apply box-border m-0 p-0; }
+
+  html { @apply scroll-smooth; }
+
+  body {
+    @apply font-sans text-gray-800 bg-gray-50 antialiased
+           dark:bg-gray-950 dark:text-gray-100;
+  }
+
+  h1, h2, h3, h4, h5, h6 { @apply font-semibold leading-tight; }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar       { @apply w-1.5; }
+  ::-webkit-scrollbar-track { @apply bg-transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full dark:bg-gray-700; }
+}
+
+/* ─── Components ───────────────────────────────────────────────────────────── */
+@layer components {
+
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           bg-primary-600 hover:bg-primary-700 active:bg-primary-800
+           text-white font-semibold py-2.5 px-6 rounded-xl
+           transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed
+           shadow-sm hover:shadow-md;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2
+           border-2 border-primary-600 text-primary-600
+           hover:bg-primary-600 hover:text-white
+           font-semibold py-2.5 px-6 rounded-xl
+           transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+           dark:border-primary-400 dark:text-primary-400
+           dark:hover:bg-primary-600 dark:hover:text-white;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2
+           text-gray-600 hover:text-primary-600 hover:bg-primary-50
+           font-medium py-2 px-4 rounded-xl
+           transition-all duration-200
+           dark:text-gray-400 dark:hover:text-primary-400 dark:hover:bg-primary-950;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2
+           bg-rose-500 hover:bg-rose-600 text-white
+           font-semibold py-2.5 px-6 rounded-xl
+           transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2;
+  }
+
+  /* Inputs */
+  .input-field {
+    @apply w-full border border-gray-200 rounded-xl px-4 py-3 text-sm
+           bg-white text-gray-900 placeholder-gray-400
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent
+           transition-all duration-200
+           dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100
+           dark:placeholder-gray-500 dark:focus:ring-primary-400;
+  }
+
+  .input-label {
+    @apply block text-sm font-medium text-gray-700 mb-1.5
+           dark:text-gray-300;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-white rounded-2xl shadow-card border border-gray-100 p-6
+           dark:bg-gray-900 dark:border-gray-800;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-card-md hover:-translate-y-0.5
+           transition-all duration-300 cursor-pointer;
+  }
+
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6;
+  }
+
+  /* Section helpers */
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-gray-900 mb-3
+           dark:text-white;
+  }
+
+  .section-subtitle {
+    @apply text-gray-500 text-lg dark:text-gray-400;
+  }
+
+  .section-wrapper {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center gap-1 text-xs font-semibold
+           px-2.5 py-1 rounded-full;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-600 to-accent-500
+           bg-clip-text text-transparent;
+  }
+
+  /* Page header */
+  .page-header {
+    @apply bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700
+           text-white py-16;
+  }
+}
+
+/* ─── Utilities ────────────────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  .animate-in {
+    animation: slideUp 0.4s ease-out both;
+  }
+
+  /* Stagger children */
+  .stagger > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger > *:nth-child(2) { animation-delay: 60ms; }
+  .stagger > *:nth-child(3) { animation-delay: 120ms; }
+  .stagger > *:nth-child(4) { animation-delay: 180ms; }
+  .stagger > *:nth-child(5) { animation-delay: 240ms; }
+  .stagger > *:nth-child(6) { animation-delay: 300ms; }
+}
