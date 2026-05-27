@@ -30,17 +30,17 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-sidebar flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Background decoration */}
+      { }
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl" />
       </div>
 
       <div className="w-full max-w-md relative z-10">
-        {/* Card */}
+        { }
         <div className="bg-white dark:bg-dark-surface rounded-3xl shadow-2xl p-8 border border-white/10">
 
-          {/* Logo */}
+          { }
           <div className="text-center mb-8">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mx-auto mb-4 shadow-glow">
               <FiActivity size={26} className="text-white" />
@@ -54,9 +54,9 @@ const Login = () => {
             </p>
           </div>
 
-          {/* Form */}
+          { }
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email */}
+            { }
             <div>
               <label className="input-label">Email Address</label>
               <div className="relative">
@@ -74,7 +74,7 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Password */}
+            { }
             <div>
               <label className="input-label">Password</label>
               <div className="relative">
@@ -100,7 +100,7 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Submit */}
+            { }
             <button
               type="submit"
               disabled={loading}
@@ -115,13 +115,13 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Footer note */}
+          { }
           <p className="text-center text-xs text-gray-400 dark:text-dark-muted mt-6">
             This portal is restricted to authorized administrators only.
           </p>
         </div>
 
-        {/* Bottom branding */}
+        { }
         <p className="text-center text-xs text-slate-500 mt-6">
           © {new Date().getFullYear()} MediFlow Healthcare Management
         </p>

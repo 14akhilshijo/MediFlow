@@ -1,15 +1,3 @@
-/**
- * seedDoctors.js
- *
- * Seeds 5 doctors (with User accounts + Department records) into MongoDB.
- *
- * Usage:
- *   node seeds/seedDoctors.js          → insert seed data
- *   node seeds/seedDoctors.js --clear  → wipe doctors + their users, then re-seed
- *
- * Run from the server/ directory:
- *   cd server && node seeds/seedDoctors.js
- */
 
 import "dotenv/config";
 import mongoose from "mongoose";
@@ -19,7 +7,6 @@ import { User }       from "../models/User.js";
 import { Doctor }     from "../models/Doctor.js";
 import { Department } from "../models/Department.js";
 
-// ─── Departments ──────────────────────────────────────────────────────────────
 const departmentData = [
   {
     name:        "Cardiology",
@@ -53,11 +40,8 @@ const departmentData = [
   },
 ];
 
-// ─── Doctor Seed Data ─────────────────────────────────────────────────────────
-// All avatar URLs verified 200 OK from Unsplash CDN.
-// Every photo is a professional doctor in white coat / medical uniform.
 const doctorSeeds = [
-  // ── 1. Cardiologist — Dr. Arjun Mehta (Male) ─────────────────────────────
+
   {
     user: {
       firstName: "Arjun",
@@ -70,7 +54,7 @@ const doctorSeeds = [
       role:      "Doctor",
       avatar: {
         public_id: "mediflow/doctors/arjun_mehta",
-        // Smart male doctor, white coat, stethoscope, confident arms-crossed pose
+
         url: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=600&h=750&fit=crop&crop=top&q=90",
       },
     },
@@ -97,7 +81,6 @@ const doctorSeeds = [
     },
   },
 
-  // ── 2. Neurologist — Dr. Priya Sharma (Female) ───────────────────────────
   {
     user: {
       firstName: "Priya",
@@ -110,7 +93,7 @@ const doctorSeeds = [
       role:      "Doctor",
       avatar: {
         public_id: "mediflow/doctors/priya_sharma",
-        // Stylish female doctor, white coat, stethoscope, confident smile — verified ✅
+
         url: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=750&fit=crop&crop=top&q=90",
       },
     },
@@ -137,7 +120,6 @@ const doctorSeeds = [
     },
   },
 
-  // ── 3. Orthopedic Surgeon — Dr. Rajesh Kumar (Male) ─────────────────────
   {
     user: {
       firstName: "Rajesh",
@@ -150,7 +132,7 @@ const doctorSeeds = [
       role:      "Doctor",
       avatar: {
         public_id: "mediflow/doctors/rajesh_kumar",
-        // Senior male doctor, white coat, stethoscope, professional look — verified ✅
+
         url: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&h=750&fit=crop&crop=top&q=90",
       },
     },
@@ -177,7 +159,6 @@ const doctorSeeds = [
     },
   },
 
-  // ── 4. Pediatrician — Dr. Sneha Patel (Female) ───────────────────────────
   {
     user: {
       firstName: "Sneha",
@@ -190,7 +171,7 @@ const doctorSeeds = [
       role:      "Doctor",
       avatar: {
         public_id: "mediflow/doctors/sneha_patel",
-        // Young female doctor, white coat, warm smile, stethoscope — verified ✅
+
         url: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=600&h=750&fit=crop&crop=top&q=90",
       },
     },
@@ -218,7 +199,6 @@ const doctorSeeds = [
     },
   },
 
-  // ── 5. Dermatologist ─────────────────────────────────────────────────────
   {
     user: {
       firstName: "Vikram",
@@ -231,7 +211,7 @@ const doctorSeeds = [
       role:      "Doctor",
       avatar: {
         public_id: "mediflow/doctors/vikram_singh",
-        // Smart male doctor, white coat, stethoscope, modern look
+
         url: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=750&fit=crop&crop=top&q=90",
       },
     },
@@ -260,9 +240,6 @@ const doctorSeeds = [
   },
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-/** Upsert a department by name; returns the document. */
 async function upsertDepartment(data) {
   const existing = await Department.findOne({ name: data.name });
   if (existing) {
@@ -274,7 +251,6 @@ async function upsertDepartment(data) {
   return dept;
 }
 
-/** Delete a doctor's User + Doctor documents by email (for --clear). */
 async function clearDoctor(email) {
   const user = await User.findOne({ email });
   if (!user) return;
@@ -283,7 +259,6 @@ async function clearDoctor(email) {
   console.log(`  🗑  Cleared doctor: ${email}`);
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
 async function seed() {
   const shouldClear = process.argv.includes("--clear");
 
@@ -292,7 +267,6 @@ async function seed() {
 
   await connectDB();
 
-  // ── Optional clear ────────────────────────────────────────────────────────
   if (shouldClear) {
     console.log("\n🗑  Clearing existing seed doctors…");
     for (const { user } of doctorSeeds) {
@@ -300,7 +274,6 @@ async function seed() {
     }
   }
 
-  // ── Upsert departments ────────────────────────────────────────────────────
   console.log("\n📂  Upserting departments…");
   const deptMap = {};
   for (const dept of departmentData) {
@@ -308,7 +281,6 @@ async function seed() {
     deptMap[dept.name] = doc._id;
   }
 
-  // ── Seed doctors ──────────────────────────────────────────────────────────
   console.log("\n👨‍⚕️  Seeding doctors…");
 
   const results = { created: 0, skipped: 0, errors: 0 };
@@ -317,7 +289,7 @@ async function seed() {
     const { user: userData, doctor: doctorData } = seed;
 
     try {
-      // Skip if user already exists
+
       const existingUser = await User.findOne({ email: userData.email });
       if (existingUser) {
         console.log(`  ↩  Skipped (already exists): ${userData.email}`);
@@ -325,16 +297,13 @@ async function seed() {
         continue;
       }
 
-      // Create User — let the pre-save hook handle password hashing
       const user = await User.create({ ...userData });
 
-      // Resolve department ObjectId
       const departmentId = deptMap[doctorData.departmentName];
       if (!departmentId) {
         throw new Error(`Department not found: ${doctorData.departmentName}`);
       }
 
-      // Create Doctor profile
       const { departmentName, ...doctorFields } = doctorData;
       await Doctor.create({
         user:       user._id,
@@ -351,7 +320,6 @@ async function seed() {
     }
   }
 
-  // ── Summary ───────────────────────────────────────────────────────────────
   console.log("\n📊  Seed Summary");
   console.log("─────────────────");
   console.log(`  Created : ${results.created}`);

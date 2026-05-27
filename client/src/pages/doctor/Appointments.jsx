@@ -10,7 +10,6 @@ import Spinner from "../../components/common/Spinner.jsx";
 import api from "../../services/api.js";
 import toast from "react-hot-toast";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
 const FILTERS = ["All", "Pending", "Confirmed", "Completed", "Cancelled", "No-Show"];
 
 const TYPE_ICONS = {
@@ -19,7 +18,6 @@ const TYPE_ICONS = {
   "Phone":     <FiPhone  size={12} className="text-green-500" />,
 };
 
-// ─── Status Update Modal ──────────────────────────────────────────────────────
 const UpdateModal = ({ appt, onClose, onSave }) => {
   const [status, setStatus]           = useState(appt.status);
   const [notes, setNotes]             = useState(appt.notes || "");
@@ -51,7 +49,7 @@ const UpdateModal = ({ appt, onClose, onSave }) => {
         </div>
 
         <div className="space-y-4">
-          {/* Patient info */}
+          { }
           <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3 text-sm">
             <p className="font-medium text-gray-900 dark:text-white">
               {appt.patient?.firstName} {appt.patient?.lastName}
@@ -63,7 +61,7 @@ const UpdateModal = ({ appt, onClose, onSave }) => {
             </p>
           </div>
 
-          {/* Status */}
+          { }
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
             <select
@@ -77,7 +75,7 @@ const UpdateModal = ({ appt, onClose, onSave }) => {
             </select>
           </div>
 
-          {/* Notes */}
+          { }
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Doctor's Notes

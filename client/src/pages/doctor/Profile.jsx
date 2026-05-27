@@ -63,10 +63,9 @@ const DoctorProfile = () => {
     e.preventDefault();
     setSaving(true);
     try {
-      // Update user profile
+
       await api.patch("/users/profile", form);
 
-      // Update doctor profile
       if (doctorId) {
         await api.patch(`/doctors/${doctorId}`, {
           ...doctorForm,
@@ -94,7 +93,7 @@ const DoctorProfile = () => {
 
       <form onSubmit={handleSave} className="space-y-6">
 
-        {/* ── Identity Card ─────────────────────────────────────────────── */}
+        { }
         <div className="card">
           <div className="flex items-center gap-4 mb-6 pb-5 border-b border-gray-100 dark:border-gray-800">
             <img
@@ -149,7 +148,7 @@ const DoctorProfile = () => {
           </div>
         </div>
 
-        {/* ── Professional Details ──────────────────────────────────────── */}
+        { }
         <div className="card">
           <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
             <FiAward size={16} className="text-primary-500" />
@@ -203,7 +202,7 @@ const DoctorProfile = () => {
           </div>
         </div>
 
-        {/* ── Qualifications ────────────────────────────────────────────── */}
+        { }
         <div className="card">
           <div className="flex items-center justify-between mb-5">
             <h3 className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
@@ -266,7 +265,7 @@ const DoctorProfile = () => {
           )}
         </div>
 
-        {/* ── Save ─────────────────────────────────────────────────────── */}
+        { }
         <button type="submit" disabled={saving} className="btn-primary w-full py-3">
           {saving ? "Saving…" : "Save Profile"}
         </button>

@@ -13,7 +13,6 @@ const navLinks = [
   { label: "Contact",     to: "/contact" },
 ];
 
-// Role-based dashboard paths
 const getDashboardPath = (role) => {
   if (role === "Doctor") return "/doctor/dashboard";
   return "/dashboard";
@@ -38,13 +37,13 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
-          {/* Logo */}
+          { }
           <Link to="/" className="flex items-center gap-0.5 shrink-0">
             <span className="text-2xl font-bold text-primary-600">Medi</span>
             <span className="text-2xl font-bold text-accent-500">Flow</span>
           </Link>
 
-          {/* Desktop Nav */}
+          { }
           <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <NavLink
@@ -63,7 +62,7 @@ const Navbar = () => {
               </NavLink>
             ))}
 
-            {/* Doctor-specific nav links */}
+            { }
             {user?.role === "Doctor" && (
               <>
                 <NavLink
@@ -94,7 +93,7 @@ const Navbar = () => {
             )}
           </nav>
 
-          {/* Right side: toggle + auth */}
+          { }
           <div className="hidden md:flex items-center gap-3">
             <DarkModeToggle compact />
 
@@ -123,7 +122,7 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile: toggle + hamburger */}
+          { }
           <div className="md:hidden flex items-center gap-2">
             <DarkModeToggle compact />
             <button
@@ -137,7 +136,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      { }
       {menuOpen && (
         <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 px-4 py-4 space-y-1 animate-slide-down">
           {navLinks.map((link) => (
@@ -158,7 +157,7 @@ const Navbar = () => {
             </NavLink>
           ))}
 
-          {/* Doctor mobile links */}
+          { }
           {user?.role === "Doctor" && (
             <>
               <NavLink

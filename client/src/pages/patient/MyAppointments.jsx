@@ -10,7 +10,6 @@ import Spinner from "../../components/common/Spinner.jsx";
 import { appointmentAPI } from "../../services/api.js";
 import toast from "react-hot-toast";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
 const FILTERS = ["All", "Pending", "Confirmed", "Completed", "Cancelled"];
 
 const TYPE_ICONS = {
@@ -19,7 +18,6 @@ const TYPE_ICONS = {
   "Phone":     <FiPhone  size={12} className="text-green-500" />,
 };
 
-// ─── Appointment Card ─────────────────────────────────────────────────────────
 const AppointmentCard = ({ appt, onCancel, cancelling }) => {
   const isPast = new Date(appt.appointmentDate) < new Date();
   const canCancel = (appt.status === "Pending" || appt.status === "Confirmed") && !isPast;
@@ -27,14 +25,14 @@ const AppointmentCard = ({ appt, onCancel, cancelling }) => {
   return (
     <div className="card hover:shadow-card-md transition-all duration-200 animate-in">
       <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-        {/* Doctor Avatar */}
+        { }
         <img
           src={appt.doctor?.user?.avatar?.url || "/default-avatar.png"}
           alt="Doctor"
           className="w-14 h-14 rounded-2xl object-cover border-2 border-gray-100 shrink-0"
         />
 
-        {/* Main Info */}
+        { }
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 flex-wrap">
             <div>
@@ -49,7 +47,7 @@ const AppointmentCard = ({ appt, onCancel, cancelling }) => {
             <AppointmentBadge status={appt.status} />
           </div>
 
-          {/* Details Row */}
+          { }
           <div className="flex flex-wrap gap-4 mt-3 text-xs text-gray-500">
             <span className="flex items-center gap-1.5">
               <FiCalendar size={12} className="text-primary-400" />
@@ -70,7 +68,7 @@ const AppointmentCard = ({ appt, onCancel, cancelling }) => {
             </span>
           </div>
 
-          {/* Reason */}
+          { }
           {appt.reason && (
             <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 rounded-lg px-3 py-2 line-clamp-2">
               <span className="font-medium text-gray-600 dark:text-gray-300">Reason: </span>
@@ -78,7 +76,7 @@ const AppointmentCard = ({ appt, onCancel, cancelling }) => {
             </p>
           )}
 
-          {/* Notes / Prescription (if completed) */}
+          { }
           {appt.status === "Completed" && (appt.notes || appt.prescription) && (
             <div className="mt-3 space-y-2">
               {appt.notes && (

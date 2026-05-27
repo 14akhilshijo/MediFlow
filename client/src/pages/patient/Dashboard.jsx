@@ -8,7 +8,6 @@ import useFetch from "../../hooks/useFetch.js";
 import AppointmentBadge from "../../components/common/AppointmentBadge.jsx";
 import Spinner from "../../components/common/Spinner.jsx";
 
-// ─── Stat Card ────────────────────────────────────────────────────────────────
 const StatCard = ({ icon: Icon, label, value, color }) => (
   <div className="card flex items-center gap-4">
     <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${color}`}>
@@ -21,7 +20,6 @@ const StatCard = ({ icon: Icon, label, value, color }) => (
   </div>
 );
 
-// ─── Main Component ───────────────────────────────────────────────────────────
 const Dashboard = () => {
   const { user } = useAuth();
   const { data, loading } = useFetch("/api/v1/appointments/my");
@@ -37,7 +35,7 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      {/* Welcome */}
+      { }
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           Welcome back, {user?.firstName}! 👋

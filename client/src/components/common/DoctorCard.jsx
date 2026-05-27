@@ -6,7 +6,7 @@ const DoctorCard = ({ doctor }) => {
 
   return (
     <div className="card hover:shadow-md transition-shadow group">
-      {/* Avatar */}
+      { }
       <div className="flex items-center gap-4 mb-4">
         <img
           src={user?.avatar?.url || "/default-avatar.png"}
@@ -22,7 +22,7 @@ const DoctorCard = ({ doctor }) => {
         </div>
       </div>
 
-      {/* Stats */}
+      { }
       <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
         <span className="flex items-center gap-1">
           <FiBriefcase size={14} className="text-primary-500" />
@@ -34,7 +34,7 @@ const DoctorCard = ({ doctor }) => {
         </span>
       </div>
 
-      {/* Fee & CTA */}
+      { }
       <div className="flex items-center justify-between">
         <span className="text-primary-700 dark:text-primary-400 font-semibold">
           ${consultationFee} <span className="text-xs font-normal text-gray-500 dark:text-gray-400">/ visit</span>

@@ -12,7 +12,6 @@ import ConfirmModal from "../components/common/ConfirmModal.jsx";
 import AppointmentDetailModal from "../components/appointments/AppointmentDetailModal.jsx";
 import toast from "react-hot-toast";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
 const STATUS_OPTIONS = ["Pending", "Confirmed", "Completed", "Cancelled", "No-Show"];
 const FILTER_OPTIONS = ["All", ...STATUS_OPTIONS];
 
@@ -22,7 +21,6 @@ const TYPE_ICONS = {
   "Phone":     "📞",
 };
 
-// ─── Quick Action Buttons ─────────────────────────────────────────────────────
 const QuickActions = ({ appt, onAction, loading }) => {
   if (appt.status === "Pending") {
     return (
@@ -68,7 +66,7 @@ const QuickActions = ({ appt, onAction, loading }) => {
       </div>
     );
   }
-  // Completed / Cancelled / No-Show — show dropdown for edge cases
+
   return (
     <div className="relative">
       <select
@@ -86,7 +84,6 @@ const QuickActions = ({ appt, onAction, loading }) => {
   );
 };
 
-// ─── Main Component ───────────────────────────────────────────────────────────
 const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading]           = useState(true);
@@ -110,7 +107,6 @@ const Appointments = () => {
 
   useEffect(() => { fetchAppointments(); }, []);
 
-  // ── Filtered list ──────────────────────────────────────────────────────────
   const filtered = useMemo(() => {
     return appointments.filter((appt) => {
       const text = [
@@ -124,7 +120,6 @@ const Appointments = () => {
     });
   }, [appointments, search, filterStatus]);
 
-  // ── Status counts ──────────────────────────────────────────────────────────
   const counts = useMemo(() => {
     const c = { All: appointments.length };
     STATUS_OPTIONS.forEach((s) => {
@@ -133,9 +128,8 @@ const Appointments = () => {
     return c;
   }, [appointments]);
 
-  // ── Status update ──────────────────────────────────────────────────────────
   const handleStatusChange = async (id, status) => {
-    // For destructive actions, show confirm modal
+
     if (status === "Cancelled") {
       setConfirmModal({ open: true, id, status });
       return;
@@ -180,7 +174,7 @@ const Appointments = () => {
         }
       />
 
-      {/* ── Filters ── */}
+      { }
       <div className="flex flex-col sm:flex-row gap-3 mb-5">
         <div className="relative flex-1 max-w-sm">
           <FiSearch size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -219,7 +213,7 @@ const Appointments = () => {
         </div>
       </div>
 
-      {/* ── Table ── */}
+      { }
       {loading ? (
         <Spinner />
       ) : filtered.length === 0 ? (
@@ -253,7 +247,7 @@ const Appointments = () => {
               <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
                 {filtered.map((appt) => (
                   <tr key={appt._id} className="table-row">
-                    {/* Patient */}
+                    { }
                     <td className="table-td">
                       <p className="font-semibold text-gray-900 dark:text-white text-sm">
                         {appt.patient?.firstName} {appt.patient?.lastName}
@@ -263,7 +257,7 @@ const Appointments = () => {
                       </p>
                     </td>
 
-                    {/* Doctor */}
+                    { }
                     <td className="table-td">
                       <p className="text-sm text-gray-700 dark:text-gray-300">
                         Dr. {appt.doctor?.user?.firstName} {appt.doctor?.user?.lastName}
@@ -273,7 +267,7 @@ const Appointments = () => {
                       </p>
                     </td>
 
-                    {/* Date & Time */}
+                    { }
                     <td className="table-td">
                       <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
                         {new Date(appt.appointmentDate).toLocaleDateString("en-US", {
@@ -285,7 +279,7 @@ const Appointments = () => {
                       </p>
                     </td>
 
-                    {/* Type */}
+                    { }
                     <td className="table-td">
                       <span className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
                         <span>{TYPE_ICONS[appt.type] ?? "📋"}</span>
@@ -293,17 +287,17 @@ const Appointments = () => {
                       </span>
                     </td>
 
-                    {/* Fee */}
+                    { }
                     <td className="table-td font-semibold text-gray-900 dark:text-white">
                       ${appt.fee}
                     </td>
 
-                    {/* Status */}
+                    { }
                     <td className="table-td">
                       <StatusBadge label={appt.status} />
                     </td>
 
-                    {/* Actions */}
+                    { }
                     <td className="table-td">
                       <QuickActions
                         appt={appt}
@@ -312,7 +306,7 @@ const Appointments = () => {
                       />
                     </td>
 
-                    {/* Details */}
+                    { }
                     <td className="table-td">
                       <button
                         onClick={() => setDetailAppt(appt)}
@@ -333,7 +327,7 @@ const Appointments = () => {
         </div>
       )}
 
-      {/* ── Confirm Cancel Modal ── */}
+      { }
       <ConfirmModal
         open={confirmModal.open}
         title="Cancel Appointment"
@@ -344,7 +338,7 @@ const Appointments = () => {
         onCancel={() => setConfirmModal({ open: false, id: null, status: null })}
       />
 
-      {/* ── Detail Modal ── */}
+      { }
       {detailAppt && (
         <AppointmentDetailModal
           appointment={detailAppt}

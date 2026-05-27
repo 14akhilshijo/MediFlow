@@ -35,7 +35,7 @@ const Messages = () => {
         setMessages((prev) =>
           prev.map((m) => (m._id === msg._id ? { ...m, isRead: true } : m))
         );
-      } catch { /* ignore */ }
+      } catch {   }
     }
   };
 
@@ -79,9 +79,9 @@ const Messages = () => {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 h-[calc(100vh-220px)] min-h-[500px]">
 
-          {/* ── Message List ── */}
+          { }
           <div className="lg:col-span-2 card p-0 overflow-hidden flex flex-col">
-            {/* Search */}
+            { }
             <div className="p-3 border-b border-gray-100 dark:border-dark-border">
               <div className="relative">
                 <FiSearch size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -95,7 +95,7 @@ const Messages = () => {
               </div>
             </div>
 
-            {/* List */}
+            { }
             <div className="flex-1 overflow-y-auto divide-y divide-gray-50 dark:divide-dark-border">
               {filtered.length === 0 ? (
                 <p className="text-center text-gray-400 dark:text-dark-muted py-10 text-sm">No results.</p>
@@ -147,11 +147,11 @@ const Messages = () => {
             </div>
           </div>
 
-          {/* ── Message Detail ── */}
+          { }
           <div className="lg:col-span-3 card overflow-hidden flex flex-col">
             {selected ? (
               <div className="flex flex-col h-full">
-                {/* Header */}
+                { }
                 <div className="pb-4 border-b border-gray-100 dark:border-dark-border mb-4">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                     {selected.subject}
@@ -167,14 +167,14 @@ const Messages = () => {
                   </div>
                 </div>
 
-                {/* Body */}
+                { }
                 <div className="flex-1 overflow-y-auto">
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm whitespace-pre-wrap">
                     {selected.message}
                   </p>
                 </div>
 
-                {/* Footer */}
+                { }
                 <div className="pt-4 border-t border-gray-100 dark:border-dark-border mt-4 flex items-center justify-between">
                   <p className="text-xs text-gray-400 dark:text-dark-muted">
                     Received {new Date(selected.createdAt).toLocaleString("en-US", {

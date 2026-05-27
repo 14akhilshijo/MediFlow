@@ -33,7 +33,7 @@ const Profile = () => {
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">My Profile</h1>
 
       <div className="card">
-        {/* Avatar */}
+        { }
         <div className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-100 dark:border-gray-800">
           <img
             src={user?.avatar?.url || "/default-avatar.png"}

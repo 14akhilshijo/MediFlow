@@ -50,7 +50,7 @@ const DoctorSchedule = () => {
     );
 
   const handleSave = async () => {
-    // Basic validation
+
     for (const slot of slots) {
       if (slot.startTime >= slot.endTime) {
         toast.error(`${slot.day}: Start time must be before end time.`);
@@ -71,7 +71,6 @@ const DoctorSchedule = () => {
     }
   };
 
-  // Group slots by day for display
   const slotsByDay = DAYS.reduce((acc, day) => {
     acc[day] = slots.filter((s) => s.day === day);
     return acc;
@@ -81,7 +80,7 @@ const DoctorSchedule = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      {/* Header */}
+      { }
       <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Schedule</h1>
@@ -135,7 +134,7 @@ const DoctorSchedule = () => {
                       key={slot._id}
                       className="bg-white dark:bg-gray-900 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-4 shadow-sm"
                     >
-                      {/* Day selector */}
+                      { }
                       <select
                         value={slot.day}
                         onChange={(e) => updateSlot(slot._id, "day", e.target.value)}
@@ -144,7 +143,7 @@ const DoctorSchedule = () => {
                         {DAYS.map((d) => <option key={d} value={d}>{d}</option>)}
                       </select>
 
-                      {/* Time range */}
+                      { }
                       <div className="flex items-center gap-2 flex-1">
                         <input
                           type="time"
@@ -161,7 +160,7 @@ const DoctorSchedule = () => {
                         />
                       </div>
 
-                      {/* Max patients */}
+                      { }
                       <div className="flex items-center gap-2">
                         <label className="text-xs text-gray-500 dark:text-gray-400 shrink-0">Max</label>
                         <input
@@ -174,7 +173,7 @@ const DoctorSchedule = () => {
                         />
                       </div>
 
-                      {/* Toggle available */}
+                      { }
                       <button
                         onClick={() => updateSlot(slot._id, "isAvailable", !slot.isAvailable)}
                         className={`flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-xl border transition-all shrink-0 ${
@@ -189,7 +188,7 @@ const DoctorSchedule = () => {
                         }
                       </button>
 
-                      {/* Delete */}
+                      { }
                       <button
                         onClick={() => removeSlot(slot._id)}
                         className="p-2 rounded-xl text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors shrink-0"
@@ -204,12 +203,12 @@ const DoctorSchedule = () => {
             );
           })}
 
-          {/* Unassigned new slots */}
+          { }
           {slots.filter((s) => !DAYS.some((d) => d === s.day) || slotsByDay[s.day]?.length === 0).length === 0 && null}
         </div>
       )}
 
-      {/* Add slot button at bottom */}
+      { }
       {slots.length > 0 && (
         <div className="mt-6 flex justify-center">
           <button

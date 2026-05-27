@@ -73,7 +73,7 @@ const Users = () => {
         subtitle={`${users.filter((u) => u.role === "Patient").length} registered patients`}
       />
 
-      {/* Filters */}
+      { }
       <div className="flex flex-col sm:flex-row gap-3 mb-5">
         <div className="relative flex-1 max-w-sm">
           <FiSearch size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />

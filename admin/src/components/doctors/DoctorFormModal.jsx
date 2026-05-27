@@ -1,18 +1,3 @@
-/**
- * DoctorFormModal
- *
- * Handles both Add and Edit modes.
- * - Add mode: all fields required, password required
- * - Edit mode: all fields optional, password hidden
- *
- * Props:
- *   open        {boolean}
- *   mode        {"add"|"edit"}
- *   doctor      {object|null}   – populated doctor doc (edit mode)
- *   departments {array}
- *   onClose     {function}
- *   onSuccess   {function}      – called after successful save
- */
 
 import { useState, useEffect, useRef } from "react";
 import { FiX, FiCamera, FiUser, FiEye, FiEyeOff } from "react-icons/fi";
@@ -54,7 +39,6 @@ const DoctorFormModal = ({ open, mode, doctor, departments, onClose, onSuccess }
   const [saving, setSaving]     = useState(false);
   const fileRef                 = useRef(null);
 
-  // Populate form when editing
   useEffect(() => {
     if (!open) return;
     if (isEdit && doctor) {
@@ -99,7 +83,6 @@ const DoctorFormModal = ({ open, mode, doctor, departments, onClose, onSuccess }
     setPreview(URL.createObjectURL(file));
   };
 
-  // Client-side validation
   const validate = () => {
     const errs = {};
     if (!isEdit) {
@@ -130,7 +113,7 @@ const DoctorFormModal = ({ open, mode, doctor, departments, onClose, onSuccess }
     try {
       const fd = new FormData();
       Object.entries(form).forEach(([k, v]) => {
-        if (isEdit && k === "password") return; // never send empty password on edit
+        if (isEdit && k === "password") return; 
         if (v !== "" && v !== undefined) fd.append(k, v);
       });
       if (avatar) fd.append("avatar", avatar);
@@ -157,7 +140,7 @@ const DoctorFormModal = ({ open, mode, doctor, departments, onClose, onSuccess }
         className="bg-white dark:bg-dark-surface rounded-2xl shadow-2xl w-full max-w-2xl mx-4 flex flex-col max-h-[92vh] animate-fade-in"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* ── Header ── */}
+        { }
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-dark-border shrink-0">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -172,10 +155,10 @@ const DoctorFormModal = ({ open, mode, doctor, departments, onClose, onSuccess }
           </button>
         </div>
 
-        {/* ── Scrollable Body ── */}
+        { }
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
 
-          {/* Avatar */}
+          { }
           <div className="flex items-center gap-4">
             <div className="relative shrink-0">
               {preview ? (
@@ -202,7 +185,7 @@ const DoctorFormModal = ({ open, mode, doctor, departments, onClose, onSuccess }
             </div>
           </div>
 
-          {/* Personal Info – hidden in edit mode for email */}
+          { }
           {!isEdit && (
             <>
               <div>
@@ -263,7 +246,7 @@ const DoctorFormModal = ({ open, mode, doctor, departments, onClose, onSuccess }
             </>
           )}
 
-          {/* Edit mode: only show editable personal fields */}
+          { }
           {isEdit && (
             <div>
               <SectionTitle>Personal Information</SectionTitle>
@@ -296,7 +279,7 @@ const DoctorFormModal = ({ open, mode, doctor, departments, onClose, onSuccess }
             </div>
           )}
 
-          {/* Professional Details */}
+          { }
           <div>
             <SectionTitle>Professional Details</SectionTitle>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -343,7 +326,7 @@ const DoctorFormModal = ({ open, mode, doctor, departments, onClose, onSuccess }
           </div>
         </form>
 
-        {/* ── Footer ── */}
+        { }
         <div className="px-6 py-4 border-t border-gray-100 dark:border-dark-border flex items-center justify-end gap-3 shrink-0">
           <button type="button" onClick={onClose} className="btn-secondary">
             Cancel

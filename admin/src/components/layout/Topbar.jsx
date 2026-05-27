@@ -25,7 +25,7 @@ const Topbar = ({ onMenuClick }) => {
 
   return (
     <header className="h-16 bg-white dark:bg-dark-surface border-b border-gray-100 dark:border-dark-border px-6 flex items-center justify-between gap-4 shrink-0">
-      {/* Left: hamburger (mobile) + page title */}
+      { }
       <div className="flex items-center gap-4 min-w-0">
         <button
           onClick={onMenuClick}
@@ -45,9 +45,9 @@ const Topbar = ({ onMenuClick }) => {
         </div>
       </div>
 
-      {/* Right: search, theme toggle, notifications, avatar */}
+      { }
       <div className="flex items-center gap-2">
-        {/* Search toggle (desktop) */}
+        { }
         <div className="hidden md:flex items-center">
           {searchOpen ? (
             <div className="relative">
@@ -73,7 +73,7 @@ const Topbar = ({ onMenuClick }) => {
           )}
         </div>
 
-        {/* Dark mode toggle */}
+        { }
         <button
           onClick={toggle}
           className="btn-icon"
@@ -82,13 +82,13 @@ const Topbar = ({ onMenuClick }) => {
           {dark ? <FiSun size={18} /> : <FiMoon size={18} />}
         </button>
 
-        {/* Notifications */}
+        { }
         <button className="btn-icon relative" aria-label="Notifications">
           <FiBell size={18} />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-dark-surface" />
         </button>
 
-        {/* Avatar */}
+        { }
         <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-xs font-bold text-white shadow-sm ml-1">
           {admin?.firstName?.[0]}{admin?.lastName?.[0]}
         </div>

@@ -3,7 +3,6 @@ import { useAdminAuth } from "./context/AdminAuthContext.jsx";
 import AdminLayout from "./components/layout/AdminLayout.jsx";
 import Spinner from "./components/common/Spinner.jsx";
 
-// Pages
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Doctors from "./pages/Doctors.jsx";

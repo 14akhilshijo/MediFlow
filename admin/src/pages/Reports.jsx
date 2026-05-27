@@ -1,9 +1,3 @@
-/**
- * Admin Reports Page
- *
- * View all patient medical reports, filter by category,
- * view/download files, and delete reports.
- */
 
 import { useState, useEffect, useCallback } from "react";
 import {
@@ -17,7 +11,6 @@ import ConfirmModal from "../components/common/ConfirmModal.jsx";
 import PageHeader from "../components/common/PageHeader.jsx";
 import toast from "react-hot-toast";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
 const CATEGORIES = [
   "All", "Lab Report", "Radiology", "Prescription", "Discharge Summary", "Other",
 ];
@@ -39,7 +32,6 @@ const FILE_TYPE_CONFIG = {
   "image/gif":       { label: "GIF",  icon: FiImage,    color: "text-pink-500",   bg: "bg-pink-50"   },
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 const formatBytes = (bytes) => {
   if (!bytes) return "0 B";
   if (bytes < 1024) return `${bytes} B`;
@@ -52,7 +44,6 @@ const formatDate = (d) =>
     month: "short", day: "numeric", year: "numeric",
   });
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
 const CategoryBadge = ({ category }) => (
   <span className={`badge ${CATEGORY_COLORS[category] || CATEGORY_COLORS.Other}`}>
     {category}
@@ -69,7 +60,6 @@ const FileTypeIcon = ({ mimeType }) => {
   );
 };
 
-// ─── Stats Bar ────────────────────────────────────────────────────────────────
 const StatsBar = ({ stats }) => {
   if (!stats) return null;
   return (
@@ -88,7 +78,6 @@ const StatsBar = ({ stats }) => {
   );
 };
 
-// ─── Main Component ───────────────────────────────────────────────────────────
 const Reports = () => {
   const [reports, setReports]       = useState([]);
   const [stats, setStats]           = useState(null);
@@ -125,14 +114,13 @@ const Reports = () => {
       const { data } = await adminReportAPI.getStats();
       setStats(data.stats);
     } catch {
-      // stats are non-critical
+
     }
   }, []);
 
   useEffect(() => { fetchReports(); }, [fetchReports]);
   useEffect(() => { fetchStats(); }, [fetchStats]);
 
-  // Reset to page 1 when filter changes
   useEffect(() => { setPage(1); }, [category]);
 
   const handleDelete = async () => {
@@ -151,7 +139,6 @@ const Reports = () => {
     }
   };
 
-  // Client-side search filter
   const filtered = search.trim()
     ? reports.filter((r) => {
         const q = search.toLowerCase();
@@ -183,12 +170,12 @@ const Reports = () => {
         }
       />
 
-      {/* Stats */}
+      { }
       {showStats && <StatsBar stats={stats} />}
 
-      {/* Filters */}
+      { }
       <div className="card p-4 flex flex-col sm:flex-row gap-3">
-        {/* Search */}
+        { }
         <div className="relative flex-1">
           <FiSearch
             size={15}
@@ -203,7 +190,7 @@ const Reports = () => {
           />
         </div>
 
-        {/* Category filter */}
+        { }
         <div className="relative">
           <FiFilter
             size={14}
@@ -229,7 +216,7 @@ const Reports = () => {
         </button>
       </div>
 
-      {/* Table */}
+      { }
       <div className="card p-0 overflow-hidden">
         {loading ? (
           <div className="py-16 flex justify-center">
@@ -269,7 +256,7 @@ const Reports = () => {
               <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
                 {filtered.map((report) => (
                   <tr key={report._id} className="table-row">
-                    {/* Report title + description */}
+                    { }
                     <td className="table-td">
                       <div className="flex items-center gap-3">
                         <FileTypeIcon mimeType={report.file?.mimeType} />
@@ -286,7 +273,7 @@ const Reports = () => {
                       </div>
                     </td>
 
-                    {/* Patient */}
+                    { }
                     <td className="table-td">
                       <div>
                         <p className="font-medium text-gray-800 dark:text-gray-200 text-sm">
@@ -296,12 +283,12 @@ const Reports = () => {
                       </div>
                     </td>
 
-                    {/* Category */}
+                    { }
                     <td className="table-td">
                       <CategoryBadge category={report.category} />
                     </td>
 
-                    {/* File info */}
+                    { }
                     <td className="table-td">
                       <p className="text-xs text-gray-600 dark:text-gray-400 truncate max-w-[140px]" title={report.file?.originalName}>
                         {report.file?.originalName}
@@ -309,12 +296,12 @@ const Reports = () => {
                       <p className="text-xs text-gray-400 dark:text-dark-muted">{formatBytes(report.file?.size)}</p>
                     </td>
 
-                    {/* Date */}
+                    { }
                     <td className="table-td whitespace-nowrap text-gray-500 dark:text-dark-muted text-xs">
                       {formatDate(report.createdAt)}
                     </td>
 
-                    {/* Actions */}
+                    { }
                     <td className="table-td">
                       <div className="flex items-center justify-end gap-1.5">
                         <a
@@ -350,7 +337,7 @@ const Reports = () => {
           </div>
         )}
 
-        {/* Pagination */}
+        { }
         {!loading && !error && totalPages > 1 && (
           <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 dark:border-dark-border">
             <p className="text-sm text-gray-500 dark:text-dark-muted">
@@ -376,7 +363,7 @@ const Reports = () => {
         )}
       </div>
 
-      {/* Delete Confirm Modal */}
+      { }
       {deleteTarget && (
         <ConfirmModal
           open={!!deleteTarget}

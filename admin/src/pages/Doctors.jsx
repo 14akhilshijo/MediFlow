@@ -22,12 +22,11 @@ const Doctors = () => {
   const [search, setSearch]           = useState("");
   const [filterVerified, setFilterVerified] = useState("all");
 
-  // Modals
   const [detailDoctor, setDetailDoctor]   = useState(null);
   const [formModal, setFormModal]         = useState({ open: false, mode: "add", doctor: null });
   const [availModal, setAvailModal]       = useState({ open: false, doctor: null });
   const [confirmId, setConfirmId]         = useState(null);
-  const [confirmType, setConfirmType]     = useState(null); // "verify" | "delete"
+  const [confirmType, setConfirmType]     = useState(null); 
 
   const fetchDoctors = async () => {
     try {
@@ -44,7 +43,7 @@ const Doctors = () => {
     try {
       const { data } = await adminDepartmentAPI.getAll();
       setDepartments(data.departments ?? []);
-    } catch { /* non-critical */ }
+    } catch {   }
   };
 
   useEffect(() => {
@@ -75,7 +74,7 @@ const Doctors = () => {
       } else {
         await adminDoctorAPI.delete(confirmId);
         toast.success("Doctor removed.");
-        // Close detail modal if it was showing this doctor
+
         if (detailDoctor?._id === confirmId) setDetailDoctor(null);
       }
       fetchDoctors();
@@ -106,7 +105,7 @@ const Doctors = () => {
         }
       />
 
-      {/* Filters */}
+      { }
       <div className="flex flex-col sm:flex-row gap-3 mb-5">
         <div className="relative flex-1 max-w-sm">
           <FiSearch size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -222,7 +221,7 @@ const Doctors = () => {
                     </td>
                     <td className="table-td">
                       <div className="flex items-center gap-1">
-                        {/* View */}
+                        { }
                         <button
                           onClick={() => setDetailDoctor(doc)}
                           className="btn-icon text-gray-500 hover:bg-gray-100 dark:hover:bg-dark-border"
@@ -230,7 +229,7 @@ const Doctors = () => {
                         >
                           <FiEye size={16} />
                         </button>
-                        {/* Edit */}
+                        { }
                         <button
                           onClick={() => setFormModal({ open: true, mode: "edit", doctor: doc })}
                           className="btn-icon text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20"
@@ -238,7 +237,7 @@ const Doctors = () => {
                         >
                           <FiEdit2 size={15} />
                         </button>
-                        {/* Schedule */}
+                        { }
                         <button
                           onClick={() => setAvailModal({ open: true, doctor: doc })}
                           className="btn-icon text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20"
@@ -246,7 +245,7 @@ const Doctors = () => {
                         >
                           <FiClock size={15} />
                         </button>
-                        {/* Verify */}
+                        { }
                         {!doc.isVerified && (
                           <button
                             onClick={() => openConfirm(doc._id, "verify")}
@@ -256,7 +255,7 @@ const Doctors = () => {
                             <FiCheckCircle size={17} />
                           </button>
                         )}
-                        {/* Delete */}
+                        { }
                         <button
                           onClick={() => openConfirm(doc._id, "delete")}
                           className="btn-icon text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
@@ -277,7 +276,7 @@ const Doctors = () => {
         </div>
       )}
 
-      {/* ── Doctor Detail Modal ── */}
+      { }
       <DoctorDetailModal
         open={!!detailDoctor}
         doctor={detailDoctor}
@@ -285,7 +284,7 @@ const Doctors = () => {
         onEdit={handleEditFromDetail}
       />
 
-      {/* ── Add / Edit Doctor Modal ── */}
+      { }
       <DoctorFormModal
         open={formModal.open}
         mode={formModal.mode}
@@ -295,7 +294,7 @@ const Doctors = () => {
         onSuccess={() => { fetchDoctors(); fetchDepartments(); }}
       />
 
-      {/* ── Availability Modal ── */}
+      { }
       <AvailabilityModal
         open={availModal.open}
         doctor={availModal.doctor}
@@ -303,7 +302,7 @@ const Doctors = () => {
         onSuccess={fetchDoctors}
       />
 
-      {/* ── Confirm Modal ── */}
+      { }
       <ConfirmModal
         open={!!confirmId}
         title={confirmType === "delete" ? "Remove Doctor" : "Verify Doctor"}

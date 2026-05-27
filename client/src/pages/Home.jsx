@@ -16,7 +16,6 @@ import { HiOutlineUserGroup } from "react-icons/hi";
 import useFetch from "../hooks/useFetch.js";
 import Spinner from "../components/common/Spinner.jsx";
 
-/* ─── Helpers ───────────────────────────────────────────────────────────────── */
 const getInitials = (firstName = "", lastName = "") =>
   `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 
@@ -29,7 +28,6 @@ const getNextSlot = (availableSlots = []) => {
   return sorted[0] ?? null;
 };
 
-/* ─── Floating Cards ────────────────────────────────────────────────────────── */
 const UpcomingCard = ({ doctor }) => {
   const user = doctor?.user ?? {};
   const firstName = user.firstName ?? "Sarah";
@@ -125,7 +123,6 @@ const HealthScoreCard = () => (
   </div>
 );
 
-/* ─── Doctor Card ───────────────────────────────────────────────────────────── */
 const DoctorHeroCard = ({ doctor }) => {
   const user      = doctor?.user ?? {};
   const firstName = user.firstName ?? "";
@@ -143,7 +140,7 @@ const DoctorHeroCard = ({ doctor }) => {
       to={`/doctors/${doctor._id}`}
       className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-card hover:shadow-card-md hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col"
     >
-      {/* Avatar */}
+      { }
       <div className="bg-gradient-to-br from-primary-50 to-blue-50 dark:from-primary-950 dark:to-blue-950 p-6 flex justify-center">
         {avatarUrl ? (
           <img
@@ -158,7 +155,7 @@ const DoctorHeroCard = ({ doctor }) => {
         )}
       </div>
 
-      {/* Info */}
+      { }
       <div className="p-4 flex flex-col flex-1">
         <h3 className="font-bold text-gray-900 dark:text-white text-center text-sm leading-tight">
           Dr. {firstName} {lastName}
@@ -168,7 +165,7 @@ const DoctorHeroCard = ({ doctor }) => {
           <p className="text-xs text-gray-400 text-center mt-0.5">{dept}</p>
         )}
 
-        {/* Rating + exp */}
+        { }
         <div className="flex items-center justify-center gap-3 mt-3">
           <div className="flex items-center gap-1">
             <FiStar size={11} className="text-amber-400 fill-amber-400" />
@@ -178,7 +175,7 @@ const DoctorHeroCard = ({ doctor }) => {
           <span className="text-xs text-gray-500 dark:text-gray-400">{exp} yrs exp</span>
         </div>
 
-        {/* Fee + Book */}
+        { }
         <div className="mt-4 flex items-center justify-between">
           <div>
             <p className="text-xs text-gray-400">Consultation</p>
@@ -193,7 +190,6 @@ const DoctorHeroCard = ({ doctor }) => {
   );
 };
 
-/* ─── Features row ──────────────────────────────────────────────────────────── */
 const features = [
   {
     icon:  HiOutlineUserGroup,
@@ -221,14 +217,12 @@ const features = [
   },
 ];
 
-/* ─── Trust badges ──────────────────────────────────────────────────────────── */
 const trustBadges = [
   { icon: FiShield,     label: "Verified Doctors", sub: "Trusted & Experienced" },
   { icon: FiLock,       label: "Secure & Private",  sub: "Your data is safe"     },
   { icon: FiHeadphones, label: "24/7 Support",      sub: "We're here to help"    },
 ];
 
-/* ─── Page Component ────────────────────────────────────────────────────────── */
 const Home = () => {
   const { data: statsData }   = useFetch("/api/v1/public/stats");
   const { data: doctorsData, loading: doctorsLoading } = useFetch("/api/v1/doctors?limit=10&sort=-rating.average");
@@ -236,7 +230,6 @@ const Home = () => {
   const s       = statsData?.stats;
   const doctors = doctorsData?.doctors ?? [];
 
-  // Hero card: show Dr. Vikram Singh specifically
   const featuredDoctor =
     doctors.find(
       (d) =>
@@ -244,21 +237,20 @@ const Home = () => {
         d.user?.lastName?.toLowerCase() === "singh"
     ) ?? doctors[0] ?? null;
 
-  // Top 4 for the doctor grid (exclude the featured hero doctor to avoid duplication)
   const gridDoctors = doctors
     .filter((d) => d._id !== featuredDoctor?._id)
     .slice(0, 4);
 
   return (
     <>
-      {/* ── Hero ──────────────────────────────────────────────────────────── */}
+      { }
       <section className="bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-16 pb-20 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
 
-            {/* Left – copy */}
+            { }
             <div className="animate-slide-up">
-              {/* Trust pill */}
+              { }
               <div className="inline-flex items-center gap-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full px-4 py-1.5 mb-6 shadow-sm">
                 <FiShield size={14} className="text-accent-500" />
                 <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">
@@ -278,7 +270,7 @@ const Home = () => {
                 instantly, and helps you manage your health — all in one place.
               </p>
 
-              {/* CTA buttons */}
+              { }
               <div className="flex flex-wrap gap-4 mb-10">
                 <Link
                   to="/book-appointment"
@@ -296,7 +288,7 @@ const Home = () => {
                 </Link>
               </div>
 
-              {/* Trust badges */}
+              { }
               <div className="flex flex-wrap gap-6">
                 {trustBadges.map(({ icon: Icon, label, sub }) => (
                   <div key={label} className="flex items-center gap-2">
@@ -312,16 +304,16 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Right – hero visual + floating cards */}
+            { }
             <div className="relative flex justify-center items-center min-h-[420px] lg:min-h-[480px]">
-              {/* Background blob */}
+              { }
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-80 h-80 rounded-full bg-gradient-to-br from-primary-200 via-blue-200 to-cyan-200 dark:from-primary-900/40 dark:via-blue-900/30 dark:to-cyan-900/20 blur-3xl opacity-60" />
               </div>
 
-              {/* Centre card — stylish doctor portrait */}
+              { }
               <div className="relative z-0 w-72 h-[420px] rounded-3xl bg-gradient-to-br from-primary-400 via-blue-500 to-cyan-400 shadow-card-lg overflow-hidden">
-                {/* Dot grid decoration */}
+                { }
                 <div className="absolute top-4 right-4 grid grid-cols-4 gap-1 opacity-30 z-10">
                   {Array.from({ length: 16 }).map((_, i) => (
                     <div key={i} className="w-1.5 h-1.5 rounded-full bg-white" />
@@ -334,18 +326,18 @@ const Home = () => {
                     className="w-full h-full object-cover object-top"
                   />
                 ) : (
-                  /* Fallback — Vikram Singh's photo */
+
                   <img
                     src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=750&fit=crop&crop=top&q=90"
                     alt="Doctor"
                     className="w-full h-full object-cover object-top"
                   />
                 )}
-                {/* Subtle gradient overlay at bottom */}
+                { }
                 <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-blue-600/40 to-transparent" />
               </div>
 
-              {/* Floating cards */}
+              { }
               <UpcomingCard doctor={featuredDoctor} />
               <MedicationCard />
               <HealthRecordsCard />
@@ -355,7 +347,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── Features row ──────────────────────────────────────────────────── */}
+      { }
       <section className="py-14 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -374,7 +366,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── Our Top Doctors ───────────────────────────────────────────────── */}
+      { }
       <section className="py-16 bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
@@ -410,7 +402,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── Stats strip ───────────────────────────────────────────────────── */}
+      { }
       {s && (
         <section className="py-12 bg-gradient-to-r from-primary-600 to-primary-500 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -435,7 +427,7 @@ const Home = () => {
         </section>
       )}
 
-      {/* ── CTA ───────────────────────────────────────────────────────────── */}
+      { }
       <section className="py-16 bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">

@@ -1,11 +1,3 @@
-/**
- * Admin Dashboard – Analytics
- *
- * Pulls data from dedicated /api/v1/analytics/* endpoints.
- * Charts: Monthly trend (AreaChart), Status donut (PieChart),
- *         Department bar (BarChart), Patient growth (BarChart).
- * Cards: KPI stat cards with MoM % change + animated count-up.
- */
 
 import { useEffect, useState, useRef } from "react";
 import {
@@ -23,7 +15,6 @@ import { analyticsAPI, adminMessageAPI } from "../services/adminApi.js";
 import Spinner from "../components/common/Spinner.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
 
-// ─── Animated counter hook ────────────────────────────────────────────────────
 const useCountUp = (target, duration = 900) => {
   const [value, setValue] = useState(0);
   const raf = useRef(null);
@@ -32,7 +23,7 @@ const useCountUp = (target, duration = 900) => {
     const start = performance.now();
     const step = (now) => {
       const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3); 
       setValue(Math.round(eased * target));
       if (progress < 1) raf.current = requestAnimationFrame(step);
     };
@@ -42,7 +33,6 @@ const useCountUp = (target, duration = 900) => {
   return value;
 };
 
-// ─── Stat Card ────────────────────────────────────────────────────────────────
 const StatCard = ({ icon: Icon, label, value, change, sub, iconBg, delay = 0 }) => {
   const animated = useCountUp(value);
   const isPositive = change >= 0;
@@ -78,7 +68,6 @@ const StatCard = ({ icon: Icon, label, value, change, sub, iconBg, delay = 0 }) 
   );
 };
 
-// ─── Custom Recharts Tooltip ──────────────────────────────────────────────────
 const ChartTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
@@ -103,7 +92,6 @@ const ChartTooltip = ({ active, payload, label }) => {
   );
 };
 
-// ─── Section Card wrapper ─────────────────────────────────────────────────────
 const ChartCard = ({ title, subtitle, badge, children, className = "" }) => (
   <div className={`card ${className}`}>
     <div className="flex items-start justify-between mb-5 gap-3">
@@ -121,7 +109,6 @@ const ChartCard = ({ title, subtitle, badge, children, className = "" }) => (
   </div>
 );
 
-// ─── Status pill ──────────────────────────────────────────────────────────────
 const STATUS_STYLES = {
   Pending:   "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
   Confirmed: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
@@ -133,7 +120,6 @@ const StatusPill = ({ status }) => (
   <span className={`badge ${STATUS_STYLES[status] || "bg-gray-100 text-gray-600"}`}>{status}</span>
 );
 
-// ─── Donut center label ───────────────────────────────────────────────────────
 const DonutLabel = ({ viewBox, total }) => {
   const { cx, cy } = viewBox;
   return (
@@ -148,7 +134,6 @@ const DonutLabel = ({ viewBox, total }) => {
   );
 };
 
-// ─── Progress bar ─────────────────────────────────────────────────────────────
 const ProgressBar = ({ pct, color }) => (
   <div className="w-full bg-gray-100 dark:bg-dark-border rounded-full h-1.5 overflow-hidden">
     <div
@@ -158,7 +143,6 @@ const ProgressBar = ({ pct, color }) => (
   </div>
 );
 
-// ─── Main Dashboard ───────────────────────────────────────────────────────────
 const Dashboard = () => {
   const { dark } = useTheme();
 
@@ -229,13 +213,12 @@ const Dashboard = () => {
     );
   }
 
-  // Trend chart: show last 6 months for readability on smaller screens
   const trendDisplay = trend.slice(-6);
 
   return (
     <div className="space-y-6">
 
-      {/* ── Page header ── */}
+      { }
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-title">Dashboard</h1>
@@ -252,7 +235,7 @@ const Dashboard = () => {
         </button>
       </div>
 
-      {/* ── KPI Stat Cards ── */}
+      { }
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
           icon={FiCalendar}
@@ -317,10 +300,10 @@ const Dashboard = () => {
         />
       </div>
 
-      {/* ── Row 2: Monthly Trend + Status Donut ── */}
+      { }
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
-        {/* Monthly Appointment Trend */}
+        { }
         <ChartCard
           title="Monthly Appointment Trend"
           subtitle="Appointments & completions over the last 6 months"
@@ -357,7 +340,7 @@ const Dashboard = () => {
           )}
         </ChartCard>
 
-        {/* Status Donut */}
+        { }
         <ChartCard title="Status Breakdown" subtitle="All-time distribution">
           {statusData.length > 0 ? (
             <>
@@ -407,10 +390,10 @@ const Dashboard = () => {
         </ChartCard>
       </div>
 
-      {/* ── Row 3: Department Bar + Patient Growth ── */}
+      { }
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-        {/* Appointments by Department */}
+        { }
         <ChartCard title="Appointments by Department" subtitle="Top departments by volume">
           {departments.length > 0 ? (
             <ResponsiveContainer width="100%" height={240}>
@@ -442,7 +425,7 @@ const Dashboard = () => {
           )}
         </ChartCard>
 
-        {/* Patient Growth */}
+        { }
         <ChartCard title="New Patient Registrations" subtitle="Monthly growth over last 6 months" badge="6 Months">
           {patientGrowth.length > 0 ? (
             <ResponsiveContainer width="100%" height={240}>
@@ -468,7 +451,7 @@ const Dashboard = () => {
         </ChartCard>
       </div>
 
-      {/* ── Row 4: Top Doctors ── */}
+      { }
       <ChartCard title="Top Doctors" subtitle="Ranked by total appointments">
         {topDoctors.length > 0 ? (
           <div className="overflow-x-auto">

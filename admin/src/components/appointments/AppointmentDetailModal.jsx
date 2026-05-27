@@ -41,7 +41,7 @@ const AppointmentDetailModal = ({ appointment: appt, onClose, onStatusChange, up
         className="modal-content max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        { }
         <div className="flex items-start justify-between mb-5">
           <div>
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">
@@ -59,7 +59,7 @@ const AppointmentDetailModal = ({ appointment: appt, onClose, onStatusChange, up
           </div>
         </div>
 
-        {/* Tabs */}
+        { }
         <div className="flex gap-1 mb-5 bg-gray-100 dark:bg-dark-border p-1 rounded-xl">
           {["details", "notes"].map((tab) => (
             <button
@@ -76,10 +76,10 @@ const AppointmentDetailModal = ({ appointment: appt, onClose, onStatusChange, up
           ))}
         </div>
 
-        {/* ── Details Tab ── */}
+        { }
         {activeTab === "details" && (
           <div className="space-y-5">
-            {/* Patient */}
+            { }
             <div className="bg-gray-50 dark:bg-dark-bg/50 rounded-xl p-4">
               <p className="text-xs font-semibold text-gray-500 dark:text-dark-muted uppercase tracking-wider mb-3">
                 Patient
@@ -94,7 +94,7 @@ const AppointmentDetailModal = ({ appointment: appt, onClose, onStatusChange, up
               </div>
             </div>
 
-            {/* Doctor */}
+            { }
             <div className="bg-gray-50 dark:bg-dark-bg/50 rounded-xl p-4">
               <p className="text-xs font-semibold text-gray-500 dark:text-dark-muted uppercase tracking-wider mb-3">
                 Doctor
@@ -108,7 +108,7 @@ const AppointmentDetailModal = ({ appointment: appt, onClose, onStatusChange, up
               </div>
             </div>
 
-            {/* Appointment */}
+            { }
             <div className="bg-gray-50 dark:bg-dark-bg/50 rounded-xl p-4">
               <p className="text-xs font-semibold text-gray-500 dark:text-dark-muted uppercase tracking-wider mb-3">
                 Appointment
@@ -146,7 +146,7 @@ const AppointmentDetailModal = ({ appointment: appt, onClose, onStatusChange, up
               )}
             </div>
 
-            {/* Booked on */}
+            { }
             <p className="text-xs text-gray-400 dark:text-dark-muted text-right">
               Booked on{" "}
               {new Date(appt.createdAt).toLocaleDateString("en-US", {
@@ -156,7 +156,7 @@ const AppointmentDetailModal = ({ appointment: appt, onClose, onStatusChange, up
           </div>
         )}
 
-        {/* ── Notes Tab ── */}
+        { }
         {activeTab === "notes" && (
           <div className="space-y-4">
             <div>

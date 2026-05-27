@@ -9,7 +9,6 @@ import { reportAPI } from "../../services/api.js";
 import Spinner from "../../components/common/Spinner.jsx";
 import toast from "react-hot-toast";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
 const CATEGORIES = [
   "All", "Lab Report", "Radiology", "Prescription", "Discharge Summary", "Other",
 ];
@@ -23,7 +22,7 @@ const ALLOWED_TYPES = {
   "image/gif":       { label: "GIF",  icon: FiImage,    color: "text-pink-500",   bg: "bg-pink-50"   },
 };
 
-const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
+const MAX_SIZE = 10 * 1024 * 1024; 
 
 const formatBytes = (bytes) => {
   if (!bytes) return "0 B";
@@ -37,7 +36,6 @@ const formatDate = (d) =>
     month: "short", day: "numeric", year: "numeric",
   });
 
-// ─── Category Badge ───────────────────────────────────────────────────────────
 const CATEGORY_COLORS = {
   "Lab Report":        "bg-blue-100 text-blue-700",
   "Radiology":         "bg-purple-100 text-purple-700",
@@ -52,7 +50,6 @@ const CategoryBadge = ({ category }) => (
   </span>
 );
 
-// ─── Progress Bar ─────────────────────────────────────────────────────────────
 const ProgressBar = ({ progress }) => (
   <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
     <div
@@ -62,7 +59,6 @@ const ProgressBar = ({ progress }) => (
   </div>
 );
 
-// ─── File Type Icon ───────────────────────────────────────────────────────────
 const FileTypeIcon = ({ mimeType, size = 20 }) => {
   const cfg = ALLOWED_TYPES[mimeType] || { icon: FiFile, color: "text-gray-500", bg: "bg-gray-50" };
   const Icon = cfg.icon;
@@ -73,13 +69,12 @@ const FileTypeIcon = ({ mimeType, size = 20 }) => {
   );
 };
 
-// ─── Report Card ──────────────────────────────────────────────────────────────
 const ReportCard = ({ report, onDelete, deleting }) => {
   const isImage = report.file?.resourceType === "image";
 
   return (
     <div className="card group hover:shadow-card-md transition-all duration-200 flex flex-col gap-4 animate-in">
-      {/* Image thumbnail */}
+      { }
       {isImage && (
         <div className="overflow-hidden rounded-xl bg-gray-50 h-36">
           <img
@@ -91,7 +86,7 @@ const ReportCard = ({ report, onDelete, deleting }) => {
         </div>
       )}
 
-      {/* Title row */}
+      { }
       <div className="flex items-start gap-3">
         {!isImage && <FileTypeIcon mimeType={report.file?.mimeType} />}
         <div className="flex-1 min-w-0">
@@ -104,7 +99,7 @@ const ReportCard = ({ report, onDelete, deleting }) => {
         </div>
       </div>
 
-      {/* Meta row */}
+      { }
       <div className="flex items-center justify-between flex-wrap gap-2">
         <CategoryBadge category={report.category} />
         <span className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
@@ -113,13 +108,13 @@ const ReportCard = ({ report, onDelete, deleting }) => {
         </span>
       </div>
 
-      {/* File info */}
+      { }
       <p className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1 truncate">
         <FiFile size={11} className="shrink-0" />
         {report.file?.originalName} · {formatBytes(report.file?.size)}
       </p>
 
-      {/* Actions */}
+      { }
       <div className="flex items-center gap-2 pt-2 border-t border-gray-100 dark:border-gray-800">
         <a
           href={report.file?.url}
@@ -157,7 +152,6 @@ const ReportCard = ({ report, onDelete, deleting }) => {
   );
 };
 
-// ─── Upload Modal ─────────────────────────────────────────────────────────────
 const UploadModal = ({ onClose, onSuccess }) => {
   const inputRef = useRef(null);
 
@@ -229,7 +223,7 @@ const UploadModal = ({ onClose, onSuccess }) => {
         className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        { }
         <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
           <div>
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">Upload Medical Report</h2>
@@ -245,7 +239,7 @@ const UploadModal = ({ onClose, onSuccess }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
-          {/* Drop Zone */}
+          { }
           <div
             onDrop={onDrop}
             onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
@@ -298,7 +292,7 @@ const UploadModal = ({ onClose, onSuccess }) => {
             )}
           </div>
 
-          {/* File error */}
+          { }
           {fileError && (
             <div className="flex items-center gap-2 text-xs text-red-600 bg-red-50 rounded-xl px-3 py-2.5">
               <FiAlertCircle size={13} className="shrink-0" />
@@ -306,7 +300,7 @@ const UploadModal = ({ onClose, onSuccess }) => {
             </div>
           )}
 
-          {/* Progress */}
+          { }
           {uploading && (
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
@@ -317,7 +311,7 @@ const UploadModal = ({ onClose, onSuccess }) => {
             </div>
           )}
 
-          {/* Title */}
+          { }
           <div>
             <label className="input-label">
               Title <span className="text-red-400">*</span>
@@ -333,7 +327,7 @@ const UploadModal = ({ onClose, onSuccess }) => {
             />
           </div>
 
-          {/* Category */}
+          { }
           <div>
             <label className="input-label">Category</label>
             <select
@@ -347,7 +341,7 @@ const UploadModal = ({ onClose, onSuccess }) => {
             </select>
           </div>
 
-          {/* Description */}
+          { }
           <div>
             <label className="input-label">
               Description{" "}
@@ -363,7 +357,7 @@ const UploadModal = ({ onClose, onSuccess }) => {
             />
           </div>
 
-          {/* Buttons */}
+          { }
           <div className="flex gap-3 pt-1">
             <button
               type="button"
@@ -397,7 +391,6 @@ const UploadModal = ({ onClose, onSuccess }) => {
   );
 };
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
 const MyReports = () => {
   const [reports, setReports]       = useState([]);
   const [loading, setLoading]       = useState(true);
@@ -425,7 +418,6 @@ const MyReports = () => {
 
   useEffect(() => { fetchReports(); }, [fetchReports]);
 
-  // Count per category (always from full list — re-fetch on category change)
   const counts = CATEGORIES.reduce((acc, c) => {
     acc[c] = c === "All" ? reports.length : reports.filter((r) => r.category === c).length;
     return acc;
@@ -447,7 +439,7 @@ const MyReports = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      {/* Header */}
+      { }
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Medical Reports</h1>
@@ -461,7 +453,7 @@ const MyReports = () => {
         </button>
       </div>
 
-      {/* Category Filter Pills */}
+      { }
       <div className="flex gap-2 flex-wrap mb-6">
         {CATEGORIES.map((c) => (
           <button
@@ -485,7 +477,7 @@ const MyReports = () => {
         ))}
       </div>
 
-      {/* States */}
+      { }
       {loading && <Spinner />}
 
       {error && !loading && (
@@ -518,7 +510,7 @@ const MyReports = () => {
         </div>
       )}
 
-      {/* Report Grid */}
+      { }
       {!loading && !error && reports.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {reports.map((report) => (
@@ -532,7 +524,7 @@ const MyReports = () => {
         </div>
       )}
 
-      {/* Upload Modal */}
+      { }
       {showUpload && (
         <UploadModal
           onClose={() => setShowUpload(false)}

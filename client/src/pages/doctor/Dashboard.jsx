@@ -8,7 +8,6 @@ import useFetch from "../../hooks/useFetch.js";
 import AppointmentBadge from "../../components/common/AppointmentBadge.jsx";
 import Spinner from "../../components/common/Spinner.jsx";
 
-// ─── Stat Card ────────────────────────────────────────────────────────────────
 const StatCard = ({ icon: Icon, label, value, color, sub }) => (
   <div className="card flex items-center gap-4">
     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${color}`}>
@@ -22,7 +21,6 @@ const StatCard = ({ icon: Icon, label, value, color, sub }) => (
   </div>
 );
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
 const DoctorDashboard = () => {
   const { user } = useAuth();
   const { data: apptData, loading: apptLoading } = useFetch("/api/v1/appointments/doctor");
@@ -52,7 +50,7 @@ const DoctorDashboard = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-      {/* Welcome Banner */}
+      { }
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-4">
           <img
@@ -82,7 +80,7 @@ const DoctorDashboard = () => {
         )}
       </div>
 
-      {/* Stats */}
+      { }
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard icon={FiCalendar}    label="Total Appointments" value={total}     color="bg-primary-600" />
         <StatCard icon={FiAlertCircle} label="Pending"            value={pending}   color="bg-amber-500" />
@@ -90,7 +88,7 @@ const DoctorDashboard = () => {
         <StatCard icon={FiActivity}    label="Today's Schedule"   value={todayAppts.length} color="bg-violet-500" sub="appointments today" />
       </div>
 
-      {/* Quick Actions */}
+      { }
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <Link
           to="/doctor/appointments"
@@ -138,7 +136,7 @@ const DoctorDashboard = () => {
         </Link>
       </div>
 
-      {/* Today's Appointments */}
+      { }
       <div className="card mb-6">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">

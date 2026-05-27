@@ -1,15 +1,3 @@
-/**
- * AvailabilityModal
- *
- * Lets admin manage a doctor's weekly availability schedule.
- * Each slot has: day, startTime, endTime, maxPatients, isAvailable.
- *
- * Props:
- *   open      {boolean}
- *   doctor    {object|null}
- *   onClose   {function}
- *   onSuccess {function}
- */
 
 import { useState, useEffect } from "react";
 import { FiX, FiPlus, FiTrash2, FiClock } from "react-icons/fi";
@@ -56,7 +44,7 @@ const AvailabilityModal = ({ open, doctor, onClose, onSuccess }) => {
     setSlots((p) => p.map((s, idx) => idx === i ? { ...s, [field]: value } : s));
 
   const handleSave = async () => {
-    // Basic validation
+
     for (const [i, slot] of slots.entries()) {
       if (!slot.startTime || !slot.endTime) {
         toast.error(`Slot ${i + 1}: start and end time are required.`);
@@ -87,7 +75,7 @@ const AvailabilityModal = ({ open, doctor, onClose, onSuccess }) => {
         className="bg-white dark:bg-dark-surface rounded-2xl shadow-2xl w-full max-w-2xl mx-4 flex flex-col max-h-[90vh] animate-fade-in"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        { }
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-dark-border shrink-0">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
@@ -103,7 +91,7 @@ const AvailabilityModal = ({ open, doctor, onClose, onSuccess }) => {
           </button>
         </div>
 
-        {/* Body */}
+        { }
         <div className="flex-1 overflow-y-auto px-6 py-5">
           {slots.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -125,7 +113,7 @@ const AvailabilityModal = ({ open, doctor, onClose, onSuccess }) => {
                       {slot.day}
                     </span>
                     <div className="flex items-center gap-2">
-                      {/* Available toggle */}
+                      { }
                       <label className="flex items-center gap-1.5 cursor-pointer">
                         <div
                           onClick={() => updateSlot(i, "isAvailable", !slot.isAvailable)}
@@ -153,7 +141,7 @@ const AvailabilityModal = ({ open, doctor, onClose, onSuccess }) => {
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {/* Day */}
+                    { }
                     <div>
                       <label className="input-label text-xs">Day</label>
                       <select
@@ -165,7 +153,7 @@ const AvailabilityModal = ({ open, doctor, onClose, onSuccess }) => {
                       </select>
                     </div>
 
-                    {/* Start Time */}
+                    { }
                     <div>
                       <label className="input-label text-xs">Start Time</label>
                       <input
@@ -176,7 +164,7 @@ const AvailabilityModal = ({ open, doctor, onClose, onSuccess }) => {
                       />
                     </div>
 
-                    {/* End Time */}
+                    { }
                     <div>
                       <label className="input-label text-xs">End Time</label>
                       <input
@@ -187,7 +175,7 @@ const AvailabilityModal = ({ open, doctor, onClose, onSuccess }) => {
                       />
                     </div>
 
-                    {/* Max Patients */}
+                    { }
                     <div>
                       <label className="input-label text-xs">Max Patients</label>
                       <input
@@ -205,7 +193,7 @@ const AvailabilityModal = ({ open, doctor, onClose, onSuccess }) => {
           )}
         </div>
 
-        {/* Footer */}
+        { }
         <div className="px-6 py-4 border-t border-gray-100 dark:border-dark-border flex items-center justify-between shrink-0">
           <button type="button" onClick={addSlot} className="btn-secondary">
             <FiPlus size={15} /> Add Slot

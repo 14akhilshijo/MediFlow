@@ -10,7 +10,6 @@ import { appointmentAPI, doctorAPI } from "../../services/api.js";
 import Spinner from "../../components/common/Spinner.jsx";
 import toast from "react-hot-toast";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
 const TIME_SLOTS = [
   "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM",
   "11:00 AM", "11:30 AM", "12:00 PM",
@@ -20,7 +19,6 @@ const TIME_SLOTS = [
 
 const STEPS = ["Choose Doctor", "Pick Date & Time", "Confirm"];
 
-// ─── Step Indicator ───────────────────────────────────────────────────────────
 const StepIndicator = ({ current }) => (
   <div className="flex items-center justify-center gap-0 mb-8">
     {STEPS.map((label, i) => {
@@ -62,7 +60,6 @@ const StepIndicator = ({ current }) => (
   </div>
 );
 
-// ─── Doctor Card ──────────────────────────────────────────────────────────────
 const DoctorSelectCard = ({ doctor, selected, onSelect }) => {
   const { user, specialization, department, experience, consultationFee, rating } = doctor;
   const isSelected = selected?._id === doctor._id;
@@ -116,7 +113,6 @@ const DoctorSelectCard = ({ doctor, selected, onSelect }) => {
   );
 };
 
-// ─── Main Component ───────────────────────────────────────────────────────────
 const BookAppointment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -136,17 +132,14 @@ const BookAppointment = () => {
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // Fetch all verified doctors
   const { data: doctorsData, loading: loadingDoctors } = useFetch("/api/v1/doctors");
   const doctors = doctorsData?.doctors || [];
 
-  // Unique specializations for filter
   const specializations = useMemo(() => {
     const specs = [...new Set(doctors.map((d) => d.specialization).filter(Boolean))];
     return ["All", ...specs.sort()];
   }, [doctors]);
 
-  // Filtered doctors
   const filteredDoctors = useMemo(() => {
     return doctors.filter((doc) => {
       const name = `${doc.user?.firstName} ${doc.user?.lastName}`.toLowerCase();
@@ -159,7 +152,6 @@ const BookAppointment = () => {
     });
   }, [doctors, search, specFilter]);
 
-  // Pre-select doctor from URL param
   useEffect(() => {
     if (preselectedDoctorId && doctors.length > 0) {
       const doc = doctors.find((d) => d._id === preselectedDoctorId);
@@ -170,7 +162,6 @@ const BookAppointment = () => {
     }
   }, [preselectedDoctorId, doctors]);
 
-  // Fetch booked slots when doctor + date changes
   useEffect(() => {
     if (!selectedDoctor || !form.appointmentDate) {
       setBookedSlots([]);
@@ -226,10 +217,9 @@ const BookAppointment = () => {
   maxDate.setMonth(maxDate.getMonth() + 3);
   const maxDateStr = maxDate.toISOString().split("T")[0];
 
-  // ── Step 1: Choose Doctor ──────────────────────────────────────────────────
   const renderStep1 = () => (
     <div className="space-y-5">
-      {/* Search */}
+      { }
       <div className="relative">
         <FiSearch size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
         <input
@@ -241,7 +231,7 @@ const BookAppointment = () => {
         />
       </div>
 
-      {/* Specialization Filter */}
+      { }
       <div>
         <div className="flex items-center gap-2 mb-2">
           <FiFilter size={13} className="text-gray-400" />
@@ -265,7 +255,7 @@ const BookAppointment = () => {
         </div>
       </div>
 
-      {/* Doctor List */}
+      { }
       {loadingDoctors ? (
         <Spinner />
       ) : filteredDoctors.length === 0 ? (
@@ -298,10 +288,9 @@ const BookAppointment = () => {
     </div>
   );
 
-  // ── Step 2: Pick Date & Time ───────────────────────────────────────────────
   const renderStep2 = () => (
     <div className="space-y-6">
-      {/* Selected Doctor Summary */}
+      { }
       <div className="flex items-center gap-3 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-2xl border border-primary-100 dark:border-primary-800">
         <img
           src={selectedDoctor?.user?.avatar?.url || "/default-avatar.png"}
@@ -326,7 +315,7 @@ const BookAppointment = () => {
         </button>
       </div>
 
-      {/* Date Picker */}
+      { }
       <div>
         <label className="input-label flex items-center gap-1.5">
           <FiCalendar size={14} className="text-primary-500" />
@@ -347,7 +336,7 @@ const BookAppointment = () => {
         />
       </div>
 
-      {/* Time Slots */}
+      { }
       {form.appointmentDate && (
         <div>
           <label className="input-label flex items-center gap-1.5">
@@ -384,7 +373,7 @@ const BookAppointment = () => {
         </div>
       )}
 
-      {/* Appointment Type */}
+      { }
       <div>
         <label className="input-label">Appointment Type</label>
         <div className="grid grid-cols-3 gap-2">
@@ -425,10 +414,9 @@ const BookAppointment = () => {
     </div>
   );
 
-  // ── Step 3: Confirm ────────────────────────────────────────────────────────
   const renderStep3 = () => (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Summary Card */}
+      { }
       <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-5 space-y-3 border border-gray-100 dark:border-gray-700">
         <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-3">Appointment Summary</h3>
         <div className="flex items-center gap-3">
@@ -468,7 +456,7 @@ const BookAppointment = () => {
         </div>
       </div>
 
-      {/* Reason */}
+      { }
       <div>
         <label className="input-label">
           Reason for Visit <span className="text-red-400">*</span>
@@ -517,7 +505,7 @@ const BookAppointment = () => {
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      {/* Header */}
+      { }
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Book an Appointment</h1>
         <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">

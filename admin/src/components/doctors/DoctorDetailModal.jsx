@@ -1,14 +1,3 @@
-/**
- * DoctorDetailModal
- *
- * Read-only view of a doctor's full profile.
- *
- * Props:
- *   open    {boolean}
- *   doctor  {object|null}
- *   onClose {function}
- *   onEdit  {function}
- */
 
 import { FiX, FiEdit2, FiStar, FiClock, FiDollarSign, FiAward, FiCheckCircle } from "react-icons/fi";
 import StatusBadge from "../common/StatusBadge.jsx";
@@ -34,7 +23,7 @@ const DoctorDetailModal = ({ open, doctor, onClose, onEdit }) => {
         className="bg-white dark:bg-dark-surface rounded-2xl shadow-2xl w-full max-w-xl mx-4 flex flex-col max-h-[90vh] animate-fade-in"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        { }
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-dark-border shrink-0">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Doctor Profile</h2>
           <div className="flex items-center gap-2">
@@ -47,10 +36,10 @@ const DoctorDetailModal = ({ open, doctor, onClose, onEdit }) => {
           </div>
         </div>
 
-        {/* Body */}
+        { }
         <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
 
-          {/* Profile header */}
+          { }
           <div className="flex items-center gap-4">
             <div className="relative shrink-0">
               <img
@@ -76,7 +65,7 @@ const DoctorDetailModal = ({ open, doctor, onClose, onEdit }) => {
             </div>
           </div>
 
-          {/* Stats row */}
+          { }
           <div className="grid grid-cols-3 gap-3">
             {[
               { icon: FiStar,       label: "Rating",     value: `${doctor.rating?.average?.toFixed(1) ?? "0.0"} (${doctor.rating?.count ?? 0})` },
@@ -91,7 +80,7 @@ const DoctorDetailModal = ({ open, doctor, onClose, onEdit }) => {
             ))}
           </div>
 
-          {/* Contact & Personal */}
+          { }
           <div>
             <h4 className="text-xs font-semibold text-gray-400 dark:text-dark-muted uppercase tracking-widest mb-2">Contact</h4>
             <InfoRow label="Email"      value={u.email} />
@@ -101,7 +90,7 @@ const DoctorDetailModal = ({ open, doctor, onClose, onEdit }) => {
             <InfoRow label="Follow-up Fee" value={doctor.followUpFee ? `$${doctor.followUpFee}` : "—"} />
           </div>
 
-          {/* Bio */}
+          { }
           {doctor.bio && (
             <div>
               <h4 className="text-xs font-semibold text-gray-400 dark:text-dark-muted uppercase tracking-widest mb-2">Bio</h4>
@@ -109,7 +98,7 @@ const DoctorDetailModal = ({ open, doctor, onClose, onEdit }) => {
             </div>
           )}
 
-          {/* Qualifications */}
+          { }
           {doctor.qualifications?.length > 0 && (
             <div>
               <h4 className="text-xs font-semibold text-gray-400 dark:text-dark-muted uppercase tracking-widest mb-2">Qualifications</h4>
@@ -127,7 +116,7 @@ const DoctorDetailModal = ({ open, doctor, onClose, onEdit }) => {
             </div>
           )}
 
-          {/* Availability */}
+          { }
           <div>
             <h4 className="text-xs font-semibold text-gray-400 dark:text-dark-muted uppercase tracking-widest mb-2">
               Availability ({doctor.availableSlots?.length ?? 0} slots)

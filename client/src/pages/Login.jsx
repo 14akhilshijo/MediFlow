@@ -18,7 +18,7 @@ const Login = () => {
     try {
       const data = await login(form);
       toast.success("Welcome back!");
-      // Route to role-specific dashboard
+
       if (data?.user?.role === "Doctor") {
         navigate("/doctor/dashboard");
       } else {

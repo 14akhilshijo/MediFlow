@@ -1,16 +1,3 @@
-/**
- * seedAdmin.js
- *
- * Creates the default admin account if it doesn't already exist.
- *
- * Usage (from server/ directory):
- *   node seeds/seedAdmin.js
- *
- * Credentials created:
- *   Email:    admin@mediflow.com
- *   Password: Admin@1234
- *   Role:     Admin
- */
 
 import "dotenv/config";
 import mongoose from "mongoose";

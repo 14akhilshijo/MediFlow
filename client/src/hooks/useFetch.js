@@ -17,7 +17,7 @@ const useFetch = (url, options = {}) => {
       setLoading(true);
       setError(null);
       try {
-        // Strip the /api/v1 prefix since the api instance already has it as baseURL
+
         const path = url.replace(/^\/api\/v1/, "");
         const response = await api.get(path, options);
         if (!cancelled) setData(response.data);
@@ -31,7 +31,7 @@ const useFetch = (url, options = {}) => {
 
     fetchData();
     return () => { cancelled = true; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [url, tick]);
 
   return { data, loading, error, refetch };

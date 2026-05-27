@@ -80,7 +80,7 @@ const AddDoctor = () => {
       <div className="card">
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* ── Avatar ── */}
+          { }
           <div className="flex items-center gap-5 pb-6 border-b border-gray-100 dark:border-dark-border">
             <div className="relative">
               {preview ? (
@@ -105,7 +105,7 @@ const AddDoctor = () => {
             </div>
           </div>
 
-          {/* ── Personal Info ── */}
+          { }
           <div>
             <h3 className="text-sm font-semibold text-gray-500 dark:text-dark-muted uppercase tracking-wider mb-4">
               Personal Information
@@ -143,7 +143,7 @@ const AddDoctor = () => {
             </div>
           </div>
 
-          {/* ── Account ── */}
+          { }
           <div>
             <h3 className="text-sm font-semibold text-gray-500 dark:text-dark-muted uppercase tracking-wider mb-4">
               Account Credentials
@@ -154,7 +154,7 @@ const AddDoctor = () => {
             </Field>
           </div>
 
-          {/* ── Professional Info ── */}
+          { }
           <div>
             <h3 className="text-sm font-semibold text-gray-500 dark:text-dark-muted uppercase tracking-wider mb-4">
               Professional Details
@@ -191,7 +191,7 @@ const AddDoctor = () => {
             </div>
           </div>
 
-          {/* ── Actions ── */}
+          { }
           <div className="flex items-center gap-3 pt-2 border-t border-gray-100 dark:border-dark-border">
             <button type="submit" disabled={loading} className="btn-primary">
               {loading ? (

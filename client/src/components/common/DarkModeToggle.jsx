@@ -1,13 +1,3 @@
-/**
- * DarkModeToggle
- *
- * A pill-shaped toggle button that switches between light and dark mode.
- * Reads and writes theme state via ThemeContext (persisted to localStorage).
- *
- * Props:
- *   compact  – boolean  – renders a smaller icon-only button (default: false)
- *   className – string  – extra classes for the outer element
- */
 
 import { useTheme } from "../../context/ThemeContext.jsx";
 import { FiSun, FiMoon } from "react-icons/fi";
@@ -51,14 +41,14 @@ const DarkModeToggle = ({ compact = false, className = "" }) => {
         ${className}
       `}
     >
-      {/* Track */}
+      { }
       <span
         className={`
           relative inline-flex w-9 h-5 rounded-full transition-colors duration-300 shrink-0
           ${dark ? "bg-primary-600" : "bg-gray-200"}
         `}
       >
-        {/* Thumb */}
+        { }
         <span
           className={`
             absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm

@@ -51,7 +51,7 @@ const Sidebar = ({ onClose }) => {
 
   return (
     <aside className="flex flex-col h-full w-64 bg-sidebar text-white select-none">
-      {/* ── Logo ── */}
+      { }
       <div className="px-5 py-5 border-b border-white/10 flex items-center gap-3">
         <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center shadow-glow">
           <FiActivity size={16} className="text-white" />
@@ -65,7 +65,7 @@ const Sidebar = ({ onClose }) => {
         </div>
       </div>
 
-      {/* ── Navigation ── */}
+      { }
       <nav className="flex-1 px-3 py-4 overflow-y-auto no-scrollbar space-y-5">
         {navGroups.map((group) => (
           <div key={group.label}>
@@ -99,7 +99,7 @@ const Sidebar = ({ onClose }) => {
         ))}
       </nav>
 
-      {/* ── Admin Profile + Logout ── */}
+      { }
       <div className="px-4 py-4 border-t border-white/10">
         <div className="flex items-center gap-3 mb-3 px-1">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-sm font-bold shadow-sm shrink-0">
