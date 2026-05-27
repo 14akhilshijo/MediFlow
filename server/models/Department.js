@@ -13,7 +13,7 @@ const departmentSchema = new mongoose.Schema(
       maxLength: [500, "Description cannot exceed 500 characters"],
     },
     icon: {
-      type: String, // icon name or URL
+      type: String,
     },
     isActive: {
       type: Boolean,

@@ -12,6 +12,7 @@ const routeTitles = {
   "/users":        { title: "Patients",     subtitle: "Manage registered patients." },
   "/departments":  { title: "Departments",  subtitle: "Manage hospital departments." },
   "/messages":     { title: "Messages",     subtitle: "Patient and visitor inquiries." },
+  "/reports":      { title: "Reports",      subtitle: "View and manage patient medical reports." },
 };
 
 const Topbar = ({ onMenuClick }) => {

@@ -40,16 +40,16 @@ const Home = () => {
       </section>
 
       {/* Stats */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map(({ icon: Icon, label, value }) => (
               <div key={label} className="text-center">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-primary-50 rounded-xl mb-3">
-                  <Icon size={22} className="text-primary-600" />
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-primary-50 dark:bg-primary-900/30 rounded-xl mb-3">
+                  <Icon size={22} className="text-primary-600 dark:text-primary-400" />
                 </div>
-                <div className="text-2xl font-bold text-gray-900">{value}</div>
-                <div className="text-sm text-gray-500">{label}</div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">{value}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">{label}</div>
               </div>
             ))}
           </div>
@@ -57,7 +57,7 @@ const Home = () => {
       </section>
 
       {/* Featured Doctors */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="section-title">Our Top Doctors</h2>

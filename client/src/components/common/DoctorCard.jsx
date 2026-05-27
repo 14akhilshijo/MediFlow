@@ -14,16 +14,16 @@ const DoctorCard = ({ doctor }) => {
           className="w-16 h-16 rounded-full object-cover border-2 border-primary-100"
         />
         <div>
-          <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+          <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">
             Dr. {user?.firstName} {user?.lastName}
           </h3>
           <p className="text-sm text-primary-600 font-medium">{specialization}</p>
-          <p className="text-xs text-gray-500">{department?.name}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{department?.name}</p>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+      <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
         <span className="flex items-center gap-1">
           <FiBriefcase size={14} className="text-primary-500" />
           {experience} yrs exp
@@ -36,8 +36,8 @@ const DoctorCard = ({ doctor }) => {
 
       {/* Fee & CTA */}
       <div className="flex items-center justify-between">
-        <span className="text-primary-700 font-semibold">
-          ${consultationFee} <span className="text-xs font-normal text-gray-500">/ visit</span>
+        <span className="text-primary-700 dark:text-primary-400 font-semibold">
+          ${consultationFee} <span className="text-xs font-normal text-gray-500 dark:text-gray-400">/ visit</span>
         </span>
         <Link
           to={`/doctors/${_id}`}

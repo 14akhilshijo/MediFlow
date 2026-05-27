@@ -42,12 +42,12 @@ const Contact = () => {
             { icon: FiMapPin, title: "Address", detail: "123 Health Ave, Medical City, MC 45678" },
           ].map(({ icon: Icon, title, detail }) => (
             <div key={title} className="card flex items-start gap-4">
-              <div className="bg-primary-50 p-3 rounded-lg">
-                <Icon size={20} className="text-primary-600" />
+              <div className="bg-primary-50 dark:bg-primary-900/30 p-3 rounded-lg">
+                <Icon size={20} className="text-primary-600 dark:text-primary-400" />
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900">{title}</h4>
-                <p className="text-sm text-gray-500">{detail}</p>
+                <h4 className="font-semibold text-gray-900 dark:text-white">{title}</h4>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{detail}</p>
               </div>
             </div>
           ))}
@@ -58,35 +58,35 @@ const Contact = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">First Name</label>
                 <input type="text" name="firstName" value={form.firstName} onChange={handleChange}
                   className="input-field" required />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
                 <input type="text" name="lastName" value={form.lastName} onChange={handleChange}
                   className="input-field" required />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
                 <input type="email" name="email" value={form.email} onChange={handleChange}
                   className="input-field" required />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone</label>
                 <input type="tel" name="phone" value={form.phone} onChange={handleChange}
                   className="input-field" required />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
               <input type="text" name="subject" value={form.subject} onChange={handleChange}
                 className="input-field" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message</label>
               <textarea name="message" value={form.message} onChange={handleChange}
                 rows={5} className="input-field resize-none" required />
             </div>

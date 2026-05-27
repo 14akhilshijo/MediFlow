@@ -3,65 +3,82 @@ import mongoose from "mongoose";
 const appointmentSchema = new mongoose.Schema(
   {
     patient: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+      type:     mongoose.Schema.Types.ObjectId,
+      ref:      "User",
+      required: [true, "Patient is required"],
     },
     doctor: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Doctor",
-      required: true,
+      type:     mongoose.Schema.Types.ObjectId,
+      ref:      "Doctor",
+      required: [true, "Doctor is required"],
     },
     department: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Department",
-      required: true,
+      type:     mongoose.Schema.Types.ObjectId,
+      ref:      "Department",
+      required: [true, "Department is required"],
     },
     appointmentDate: {
-      type: Date,
+      type:     Date,
       required: [true, "Appointment date is required"],
     },
     timeSlot: {
-      type: String,
+      type:     String,
       required: [true, "Time slot is required"],
-    },
-    status: {
-      type: String,
-      enum: ["Pending", "Confirmed", "Completed", "Cancelled", "No-Show"],
-      default: "Pending",
+      trim:     true,
     },
     type: {
-      type: String,
-      enum: ["In-Person", "Video", "Phone"],
+      type:    String,
+      enum:    {
+        values:  ["In-Person", "Video", "Phone"],
+        message: "Type must be In-Person, Video, or Phone",
+      },
       default: "In-Person",
     },
     reason: {
-      type: String,
-      required: [true, "Reason for appointment is required"],
-      maxLength: [300, "Reason cannot exceed 300 characters"],
+      type:      String,
+      required:  [true, "Reason for appointment is required"],
+      trim:      true,
+      maxLength: [500, "Reason cannot exceed 500 characters"],
     },
     notes: {
-      type: String,
+      type:      String,
+      trim:      true,
       maxLength: [1000, "Notes cannot exceed 1000 characters"],
     },
     prescription: {
-      type: String,
+      type:      String,
+      trim:      true,
+      maxLength: [2000, "Prescription cannot exceed 2000 characters"],
+    },
+    status: {
+      type:    String,
+      enum:    {
+        values:  ["Pending", "Confirmed", "Completed", "Cancelled", "No-Show"],
+        message: "Invalid status value",
+      },
+      default: "Pending",
     },
     fee: {
-      type: Number,
-      required: true,
+      type:     Number,
+      required: [true, "Fee is required"],
+      min:      [0, "Fee cannot be negative"],
     },
     paymentStatus: {
-      type: String,
-      enum: ["Pending", "Paid", "Refunded"],
+      type:    String,
+      enum:    ["Pending", "Paid", "Refunded"],
       default: "Pending",
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON:   { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
 
-// Index for efficient queries
 appointmentSchema.index({ patient: 1, appointmentDate: -1 });
 appointmentSchema.index({ doctor: 1, appointmentDate: 1 });
+appointmentSchema.index({ status: 1 });
+appointmentSchema.index({ doctor: 1, appointmentDate: 1, timeSlot: 1 });
 
 export const Appointment = mongoose.model("Appointment", appointmentSchema);

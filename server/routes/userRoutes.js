@@ -10,12 +10,11 @@ import { protect, restrictTo } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-// All routes require authentication
 router.use(protect);
 
-router.get("/", restrictTo("Admin"), getAllUsers);
-router.get("/:id", restrictTo("Admin"), getUserById);
+router.get("/",       restrictTo("Admin"), getAllUsers);
 router.patch("/profile", updateProfile);
+router.get("/:id",    restrictTo("Admin"), getUserById);
 router.patch("/:id/deactivate", restrictTo("Admin"), deactivateUser);
 router.delete("/:id", restrictTo("Admin"), deleteUser);
 

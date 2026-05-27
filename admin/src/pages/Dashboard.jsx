@@ -1,330 +1,549 @@
-import { useEffect, useState } from "react";
+/**
+ * Admin Dashboard – Analytics
+ *
+ * Pulls data from dedicated /api/v1/analytics/* endpoints.
+ * Charts: Monthly trend (AreaChart), Status donut (PieChart),
+ *         Department bar (BarChart), Patient growth (BarChart).
+ * Cards: KPI stat cards with MoM % change + animated count-up.
+ */
+
+import { useEffect, useState, useRef } from "react";
 import {
   FiCalendar, FiClock, FiCheckCircle, FiXCircle,
-  FiUsers, FiActivity, FiTrendingUp, FiAlertCircle,
-  FiArrowUpRight, FiArrowDownRight,
+  FiUsers, FiActivity, FiTrendingUp, FiFileText,
+  FiArrowUpRight, FiArrowDownRight, FiRefreshCw,
+  FiStar, FiAward,
 } from "react-icons/fi";
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, PieChart, Pie, Cell, Legend, AreaChart, Area,
+  AreaChart, Area, BarChart, Bar, XAxis, YAxis,
+  Tooltip, ResponsiveContainer, CartesianGrid,
+  PieChart, Pie, Cell, Legend,
 } from "recharts";
-import { adminAppointmentAPI, adminDoctorAPI, adminUserAPI, adminMessageAPI } from "../services/adminApi.js";
+import { analyticsAPI, adminMessageAPI } from "../services/adminApi.js";
 import Spinner from "../components/common/Spinner.jsx";
-import StatusBadge from "../components/common/StatusBadge.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
 
-/* ── Stat Card ─────────────────────────────────────────────────────────────── */
-const StatCard = ({ icon: Icon, label, value, change, changeLabel, gradient, iconBg }) => {
+// ─── Animated counter hook ────────────────────────────────────────────────────
+const useCountUp = (target, duration = 900) => {
+  const [value, setValue] = useState(0);
+  const raf = useRef(null);
+  useEffect(() => {
+    if (target === null || target === undefined) return;
+    const start = performance.now();
+    const step = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      setValue(Math.round(eased * target));
+      if (progress < 1) raf.current = requestAnimationFrame(step);
+    };
+    raf.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf.current);
+  }, [target, duration]);
+  return value;
+};
+
+// ─── Stat Card ────────────────────────────────────────────────────────────────
+const StatCard = ({ icon: Icon, label, value, change, sub, iconBg, delay = 0 }) => {
+  const animated = useCountUp(value);
   const isPositive = change >= 0;
   return (
-    <div className="stat-card group">
-      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${iconBg}`}>
-        <Icon size={22} className="text-white" />
+    <div
+      className="stat-card group animate-fade-in"
+      style={{ animationDelay: `${delay}ms`, animationFillMode: "both" }}
+    >
+      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${iconBg}`}>
+        <Icon size={21} className="text-white" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-2xl font-bold text-gray-900 dark:text-white tabular-nums">
-          {value ?? <span className="skeleton w-12 h-7 inline-block rounded" />}
+        <p className="text-2xl font-bold text-gray-900 dark:text-white tabular-nums leading-none">
+          {value !== null && value !== undefined
+            ? animated.toLocaleString()
+            : <span className="skeleton w-14 h-7 inline-block rounded-lg" />}
         </p>
-        <p className="text-sm text-gray-500 dark:text-dark-muted truncate">{label}</p>
+        <p className="text-sm text-gray-500 dark:text-dark-muted mt-1 truncate">{label}</p>
+        {sub && <p className="text-xs text-gray-400 dark:text-dark-muted mt-0.5">{sub}</p>}
       </div>
-      {change !== undefined && (
-        <div className={`flex items-center gap-1 text-xs font-semibold shrink-0 ${isPositive ? "text-green-600 dark:text-green-400" : "text-red-500 dark:text-red-400"}`}>
-          {isPositive ? <FiArrowUpRight size={14} /> : <FiArrowDownRight size={14} />}
-          {Math.abs(change)}%
+      {change !== undefined && change !== null && (
+        <div className={`flex flex-col items-end gap-0.5 shrink-0 ${
+          isPositive ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"
+        }`}>
+          <div className="flex items-center gap-0.5 text-xs font-bold">
+            {isPositive ? <FiArrowUpRight size={13} /> : <FiArrowDownRight size={13} />}
+            {Math.abs(change)}%
+          </div>
+          <span className="text-[10px] text-gray-400 dark:text-dark-muted font-normal">vs last mo.</span>
         </div>
       )}
     </div>
   );
 };
 
-/* ── Custom Tooltip ─────────────────────────────────────────────────────────── */
-const CustomTooltip = ({ active, payload, label }) => {
+// ─── Custom Recharts Tooltip ──────────────────────────────────────────────────
+const ChartTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-lg px-4 py-3 text-sm">
-      <p className="font-semibold text-gray-700 dark:text-gray-200 mb-1">{label}</p>
+    <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-card-hover px-4 py-3 text-sm min-w-[130px]">
+      <p className="font-semibold text-gray-700 dark:text-gray-200 mb-2 text-xs uppercase tracking-wide">
+        {label}
+      </p>
       {payload.map((p) => (
-        <p key={p.name} style={{ color: p.color }} className="font-medium">
-          {p.name}: <span className="tabular-nums">{p.value}</span>
-        </p>
+        <div key={p.name} className="flex items-center justify-between gap-4">
+          <span className="flex items-center gap-1.5 text-gray-500 dark:text-dark-muted">
+            <span className="w-2 h-2 rounded-full shrink-0" style={{ background: p.color }} />
+            {p.name}
+          </span>
+          <span className="font-semibold tabular-nums" style={{ color: p.color }}>
+            {typeof p.value === "number" && p.name.toLowerCase().includes("revenue")
+              ? `₹${p.value.toLocaleString()}`
+              : p.value.toLocaleString()}
+          </span>
+        </div>
       ))}
     </div>
   );
 };
 
-/* ── Pie colors ─────────────────────────────────────────────────────────────── */
-const PIE_COLORS = ["#f59e0b", "#3b82f6", "#10b981", "#ef4444", "#8b5cf6"];
+// ─── Section Card wrapper ─────────────────────────────────────────────────────
+const ChartCard = ({ title, subtitle, badge, children, className = "" }) => (
+  <div className={`card ${className}`}>
+    <div className="flex items-start justify-between mb-5 gap-3">
+      <div>
+        <h2 className="section-title">{title}</h2>
+        {subtitle && <p className="text-xs text-gray-400 dark:text-dark-muted mt-0.5">{subtitle}</p>}
+      </div>
+      {badge && (
+        <span className="badge bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 shrink-0 text-[11px]">
+          {badge}
+        </span>
+      )}
+    </div>
+    {children}
+  </div>
+);
 
-/* ── Mock trend data (last 7 days) ─────────────────────────────────────────── */
-const generateTrend = (stats) => {
-  if (!stats) return [];
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  return days.map((day, i) => ({
-    day,
-    appointments: Math.max(1, Math.round((stats.total / 7) * (0.6 + Math.random() * 0.8))),
-    completed:    Math.max(0, Math.round((stats.completed / 7) * (0.5 + Math.random() * 1.0))),
-  }));
+// ─── Status pill ──────────────────────────────────────────────────────────────
+const STATUS_STYLES = {
+  Pending:   "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+  Confirmed: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+  Completed: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+  Cancelled: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+  "No-Show": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
+};
+const StatusPill = ({ status }) => (
+  <span className={`badge ${STATUS_STYLES[status] || "bg-gray-100 text-gray-600"}`}>{status}</span>
+);
+
+// ─── Donut center label ───────────────────────────────────────────────────────
+const DonutLabel = ({ viewBox, total }) => {
+  const { cx, cy } = viewBox;
+  return (
+    <>
+      <text x={cx} y={cy - 8} textAnchor="middle" className="fill-gray-900 dark:fill-white" fontSize={22} fontWeight={700}>
+        {total?.toLocaleString()}
+      </text>
+      <text x={cx} y={cy + 12} textAnchor="middle" className="fill-gray-400" fontSize={11}>
+        total
+      </text>
+    </>
+  );
 };
 
-/* ── Dashboard ──────────────────────────────────────────────────────────────── */
+// ─── Progress bar ─────────────────────────────────────────────────────────────
+const ProgressBar = ({ pct, color }) => (
+  <div className="w-full bg-gray-100 dark:bg-dark-border rounded-full h-1.5 overflow-hidden">
+    <div
+      className="h-full rounded-full transition-all duration-700 ease-out"
+      style={{ width: `${pct}%`, background: color }}
+    />
+  </div>
+);
+
+// ─── Main Dashboard ───────────────────────────────────────────────────────────
 const Dashboard = () => {
   const { dark } = useTheme();
-  const [stats, setStats]           = useState(null);
-  const [doctorCount, setDoctorCount] = useState(null);
-  const [userCount, setUserCount]   = useState(null);
-  const [recentAppts, setRecentAppts] = useState([]);
-  const [unreadMsgs, setUnreadMsgs] = useState(0);
-  const [loading, setLoading]       = useState(true);
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const [statsRes, doctorsRes, usersRes, apptRes, msgRes] = await Promise.all([
-          adminAppointmentAPI.getStats(),
-          adminDoctorAPI.getAll(),
-          adminUserAPI.getAll(),
-          adminAppointmentAPI.getAll({ limit: 5, sort: "-createdAt" }),
-          adminMessageAPI.getAll(),
-        ]);
-        setStats(statsRes.data.stats);
-        setDoctorCount(doctorsRes.data.count ?? doctorsRes.data.doctors?.length);
-        setUserCount(usersRes.data.total ?? usersRes.data.users?.length);
-        setRecentAppts((apptRes.data.appointments ?? []).slice(0, 5));
-        const msgs = msgRes.data.messages ?? [];
-        setUnreadMsgs(msgs.filter((m) => !m.isRead).length);
-      } catch {
-        // silently fail – show empty state
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
+  const [overview,     setOverview]     = useState(null);
+  const [trend,        setTrend]        = useState([]);
+  const [statusData,   setStatusData]   = useState([]);
+  const [departments,  setDepartments]  = useState([]);
+  const [topDoctors,   setTopDoctors]   = useState([]);
+  const [patientGrowth, setPatientGrowth] = useState([]);
+  const [unreadMsgs,   setUnreadMsgs]   = useState(null);
+  const [loading,      setLoading]      = useState(true);
+  const [refreshing,   setRefreshing]   = useState(false);
+  const [error,        setError]        = useState(null);
 
-  if (loading) return <Spinner />;
+  const loadAll = async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else setLoading(true);
+    setError(null);
+    try {
+      const [ovRes, trendRes, statusRes, deptRes, docRes, growthRes, msgRes] = await Promise.all([
+        analyticsAPI.getOverview(),
+        analyticsAPI.getMonthlyTrend(),
+        analyticsAPI.getStatusBreakdown(),
+        analyticsAPI.getDepartments(),
+        analyticsAPI.getTopDoctors(),
+        analyticsAPI.getPatientGrowth(),
+        adminMessageAPI.getAll(),
+      ]);
+      setOverview(ovRes.data.overview);
+      setTrend(trendRes.data.trend || []);
+      setStatusData(statusRes.data.breakdown || []);
+      setDepartments(deptRes.data.departments || []);
+      setTopDoctors(docRes.data.doctors || []);
+      setPatientGrowth(growthRes.data.growth || []);
+      const msgs = msgRes.data.messages || [];
+      setUnreadMsgs(msgs.filter((m) => !m.isRead).length);
+    } catch (err) {
+      setError(err.message || "Failed to load analytics.");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
-  const barData = stats
-    ? [
-        { name: "Pending",   value: stats.pending,   fill: "#f59e0b" },
-        { name: "Confirmed", value: stats.confirmed, fill: "#3b82f6" },
-        { name: "Completed", value: stats.completed, fill: "#10b981" },
-        { name: "Cancelled", value: stats.cancelled, fill: "#ef4444" },
-      ]
-    : [];
+  useEffect(() => { loadAll(); }, []);
 
-  const pieData = barData.filter((d) => d.value > 0);
-  const trendData = generateTrend(stats);
+  const axisColor  = dark ? "#475569" : "#9ca3af";
+  const gridColor  = dark ? "#1e293b" : "#f1f5f9";
+  const ov         = overview;
 
-  const axisColor = dark ? "#475569" : "#9ca3af";
-  const gridColor = dark ? "#1e293b" : "#f3f4f6";
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-3">
+        <Spinner />
+        <p className="text-sm text-gray-400 dark:text-dark-muted animate-pulse">Loading analytics…</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-4">
+        <p className="text-red-500 text-sm">{error}</p>
+        <button onClick={() => loadAll()} className="btn-secondary text-sm">
+          <FiRefreshCw size={14} /> Retry
+        </button>
+      </div>
+    );
+  }
+
+  // Trend chart: show last 6 months for readability on smaller screens
+  const trendDisplay = trend.slice(-6);
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6">
 
-      {/* ── Stat Cards ── */}
+      {/* ── Page header ── */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="page-title">Dashboard</h1>
+          <p className="page-subtitle">Real-time analytics overview</p>
+        </div>
+        <button
+          onClick={() => loadAll(true)}
+          disabled={refreshing}
+          className="btn-secondary gap-2 text-sm"
+          title="Refresh data"
+        >
+          <FiRefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
+          {refreshing ? "Refreshing…" : "Refresh"}
+        </button>
+      </div>
+
+      {/* ── KPI Stat Cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
           icon={FiCalendar}
           label="Total Appointments"
-          value={stats?.total}
-          change={12}
+          value={ov?.appointments.total}
+          change={ov?.appointments.change}
+          sub={`${ov?.appointments.thisMonth ?? 0} this month`}
           iconBg="bg-primary-600"
-        />
-        <StatCard
-          icon={FiClock}
-          label="Pending Requests"
-          value={stats?.pending}
-          change={-3}
-          iconBg="bg-amber-500"
-        />
-        <StatCard
-          icon={FiCheckCircle}
-          label="Completed"
-          value={stats?.completed}
-          change={8}
-          iconBg="bg-emerald-500"
-        />
-        <StatCard
-          icon={FiXCircle}
-          label="Cancelled"
-          value={stats?.cancelled}
-          change={-5}
-          iconBg="bg-red-500"
-        />
-        <StatCard
-          icon={FiActivity}
-          label="Total Doctors"
-          value={doctorCount}
-          iconBg="bg-indigo-500"
+          delay={0}
         />
         <StatCard
           icon={FiUsers}
           label="Total Patients"
-          value={userCount}
-          change={15}
+          value={ov?.patients.total}
+          change={ov?.patients.change}
+          sub={`${ov?.patients.thisMonth ?? 0} new this month`}
           iconBg="bg-pink-500"
+          delay={60}
         />
         <StatCard
-          icon={FiAlertCircle}
-          label="Unread Messages"
-          value={unreadMsgs}
-          iconBg="bg-violet-500"
+          icon={FiActivity}
+          label="Active Doctors"
+          value={ov?.doctors.active}
+          sub={`${ov?.doctors.total ?? 0} total registered`}
+          iconBg="bg-indigo-500"
+          delay={120}
+        />
+        <StatCard
+          icon={FiFileText}
+          label="Medical Reports"
+          value={ov?.reports.total}
+          iconBg="bg-teal-500"
+          delay={180}
+        />
+        <StatCard
+          icon={FiClock}
+          label="Pending"
+          value={ov?.appointments.pending}
+          iconBg="bg-amber-500"
+          delay={240}
+        />
+        <StatCard
+          icon={FiCheckCircle}
+          label="Completed"
+          value={ov?.appointments.completed}
+          iconBg="bg-emerald-500"
+          delay={300}
         />
         <StatCard
           icon={FiTrendingUp}
           label="Confirmed"
-          value={stats?.confirmed}
-          change={6}
+          value={ov?.appointments.confirmed}
           iconBg="bg-cyan-500"
+          delay={360}
+        />
+        <StatCard
+          icon={FiXCircle}
+          label="Cancelled"
+          value={ov?.appointments.cancelled}
+          iconBg="bg-red-500"
+          delay={420}
         />
       </div>
 
-      {/* ── Charts Row ── */}
+      {/* ── Row 2: Monthly Trend + Status Donut ── */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
-        {/* Area Chart – Weekly Trend */}
-        <div className="xl:col-span-2 card">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="section-title">Weekly Appointment Trend</h2>
-              <p className="text-xs text-gray-400 dark:text-dark-muted mt-0.5">Last 7 days overview</p>
-            </div>
-            <span className="badge bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400">
-              This Week
-            </span>
-          </div>
-          <ResponsiveContainer width="100%" height={240}>
-            <AreaChart data={trendData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-              <defs>
-                <linearGradient id="gradAppt" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#2563eb" stopOpacity={0.15} />
-                  <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="gradComp" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#10b981" stopOpacity={0.15} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-              <XAxis dataKey="day" tick={{ fontSize: 12, fill: axisColor }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 12, fill: axisColor }} axisLine={false} tickLine={false} />
-              <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="appointments" name="Total" stroke="#2563eb" strokeWidth={2.5} fill="url(#gradAppt)" dot={false} activeDot={{ r: 5 }} />
-              <Area type="monotone" dataKey="completed"    name="Completed" stroke="#10b981" strokeWidth={2.5} fill="url(#gradComp)" dot={false} activeDot={{ r: 5 }} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Pie Chart – Status Distribution */}
-        <div className="card">
-          <div className="mb-6">
-            <h2 className="section-title">Status Distribution</h2>
-            <p className="text-xs text-gray-400 dark:text-dark-muted mt-0.5">All-time breakdown</p>
-          </div>
-          {pieData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={240}>
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="45%"
-                  innerRadius={55}
-                  outerRadius={85}
-                  paddingAngle={3}
-                  dataKey="value"
-                >
-                  {pieData.map((entry, i) => (
-                    <Cell key={entry.name} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip content={<CustomTooltip />} />
-                <Legend
-                  iconType="circle"
-                  iconSize={8}
-                  wrapperStyle={{ fontSize: "12px", paddingTop: "12px" }}
-                />
-              </PieChart>
+        {/* Monthly Appointment Trend */}
+        <ChartCard
+          title="Monthly Appointment Trend"
+          subtitle="Appointments & completions over the last 6 months"
+          badge="Last 6 Months"
+          className="xl:col-span-2"
+        >
+          {trendDisplay.length > 0 ? (
+            <ResponsiveContainer width="100%" height={250}>
+              <AreaChart data={trendDisplay} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="gTotal" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%"  stopColor="#2563eb" stopOpacity={0.18} />
+                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="gCompleted" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%"  stopColor="#10b981" stopOpacity={0.18} />
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                <XAxis dataKey="month" tick={{ fontSize: 12, fill: axisColor }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 12, fill: axisColor }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip content={<ChartTooltip />} />
+                <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: "12px", paddingTop: "12px" }} />
+                <Area type="monotone" dataKey="total"     name="Total"     stroke="#2563eb" strokeWidth={2.5} fill="url(#gTotal)"     dot={false} activeDot={{ r: 5, strokeWidth: 0 }} />
+                <Area type="monotone" dataKey="completed" name="Completed" stroke="#10b981" strokeWidth={2.5} fill="url(#gCompleted)" dot={false} activeDot={{ r: 5, strokeWidth: 0 }} />
+                <Area type="monotone" dataKey="cancelled" name="Cancelled" stroke="#ef4444" strokeWidth={1.5} fill="none"             dot={false} activeDot={{ r: 4, strokeWidth: 0 }} strokeDasharray="4 3" />
+              </AreaChart>
             </ResponsiveContainer>
+          ) : (
+            <div className="flex items-center justify-center h-48 text-gray-400 dark:text-dark-muted text-sm">
+              No appointment data yet
+            </div>
+          )}
+        </ChartCard>
+
+        {/* Status Donut */}
+        <ChartCard title="Status Breakdown" subtitle="All-time distribution">
+          {statusData.length > 0 ? (
+            <>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={statusData}
+                    dataKey="count"
+                    nameKey="status"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={58}
+                    outerRadius={85}
+                    paddingAngle={3}
+                    labelLine={false}
+                  >
+                    {statusData.map((entry) => (
+                      <Cell key={entry.status} fill={entry.color} />
+                    ))}
+                    <DonutLabel total={ov?.appointments.total} />
+                  </Pie>
+                  <Tooltip content={<ChartTooltip />} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="space-y-2.5 mt-3">
+                {statusData.map((s) => (
+                  <div key={s.status}>
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 font-medium">
+                        <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.color }} />
+                        {s.status}
+                      </span>
+                      <span className="tabular-nums text-gray-500 dark:text-dark-muted">
+                        {s.count} · {s.pct}%
+                      </span>
+                    </div>
+                    <ProgressBar pct={s.pct} color={s.color} />
+                  </div>
+                ))}
+              </div>
+            </>
           ) : (
             <div className="flex items-center justify-center h-48 text-gray-400 dark:text-dark-muted text-sm">
               No data yet
             </div>
           )}
-        </div>
+        </ChartCard>
       </div>
 
-      {/* ── Bar Chart + Recent Appointments ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      {/* ── Row 3: Department Bar + Patient Growth ── */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-        {/* Bar Chart */}
-        <div className="card">
-          <div className="mb-6">
-            <h2 className="section-title">Appointment Overview</h2>
-            <p className="text-xs text-gray-400 dark:text-dark-muted mt-0.5">By status</p>
-          </div>
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={barData} barSize={32} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
-              <XAxis dataKey="name" tick={{ fontSize: 11, fill: axisColor }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: axisColor }} axisLine={false} tickLine={false} />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: dark ? "#1e293b" : "#f8fafc" }} />
-              <Bar dataKey="value" name="Count" radius={[6, 6, 0, 0]}>
-                {barData.map((entry) => (
-                  <Cell key={entry.name} fill={entry.fill} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Recent Appointments */}
-        <div className="xl:col-span-2 card p-0 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-dark-border flex items-center justify-between">
-            <div>
-              <h2 className="section-title">Recent Appointments</h2>
-              <p className="text-xs text-gray-400 dark:text-dark-muted mt-0.5">Latest 5 bookings</p>
-            </div>
-          </div>
-          {recentAppts.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50 dark:bg-dark-bg/50">
-                  <tr>
-                    <th className="table-th">Patient</th>
-                    <th className="table-th">Doctor</th>
-                    <th className="table-th">Date</th>
-                    <th className="table-th">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
-                  {recentAppts.map((appt) => (
-                    <tr key={appt._id} className="table-row">
-                      <td className="table-td font-medium">
-                        {appt.patient?.firstName} {appt.patient?.lastName}
-                      </td>
-                      <td className="table-td text-gray-500 dark:text-dark-muted">
-                        Dr. {appt.doctor?.user?.firstName} {appt.doctor?.user?.lastName}
-                      </td>
-                      <td className="table-td text-gray-500 dark:text-dark-muted">
-                        {new Date(appt.appointmentDate).toLocaleDateString("en-US", {
-                          month: "short", day: "numeric", year: "numeric",
-                        })}
-                      </td>
-                      <td className="table-td">
-                        <StatusBadge label={appt.status} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        {/* Appointments by Department */}
+        <ChartCard title="Appointments by Department" subtitle="Top departments by volume">
+          {departments.length > 0 ? (
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart
+                data={departments}
+                layout="vertical"
+                barSize={14}
+                margin={{ top: 0, right: 16, left: 0, bottom: 0 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 11, fill: axisColor }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  tick={{ fontSize: 11, fill: axisColor }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={90}
+                />
+                <Tooltip content={<ChartTooltip />} cursor={{ fill: dark ? "#1e293b" : "#f8fafc" }} />
+                <Bar dataKey="total"     name="Total"     fill="#2563eb" radius={[0, 6, 6, 0]} />
+                <Bar dataKey="completed" name="Completed" fill="#10b981" radius={[0, 6, 6, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           ) : (
-            <div className="flex items-center justify-center h-40 text-gray-400 dark:text-dark-muted text-sm">
-              No recent appointments
+            <div className="flex items-center justify-center h-48 text-gray-400 dark:text-dark-muted text-sm">
+              No department data yet
             </div>
           )}
-        </div>
+        </ChartCard>
+
+        {/* Patient Growth */}
+        <ChartCard title="New Patient Registrations" subtitle="Monthly growth over last 6 months" badge="6 Months">
+          {patientGrowth.length > 0 ? (
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={patientGrowth} barSize={28} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="gPatient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stopColor="#ec4899" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#f43f5e" stopOpacity={0.7} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 12, fill: axisColor }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 12, fill: axisColor }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip content={<ChartTooltip />} cursor={{ fill: dark ? "#1e293b" : "#f8fafc" }} />
+                <Bar dataKey="count" name="New Patients" fill="url(#gPatient)" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex items-center justify-center h-48 text-gray-400 dark:text-dark-muted text-sm">
+              No patient data yet
+            </div>
+          )}
+        </ChartCard>
       </div>
+
+      {/* ── Row 4: Top Doctors ── */}
+      <ChartCard title="Top Doctors" subtitle="Ranked by total appointments">
+        {topDoctors.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-dark-border">
+                  <th className="table-th pl-0">#</th>
+                  <th className="table-th">Doctor</th>
+                  <th className="table-th">Department</th>
+                  <th className="table-th text-center">Total</th>
+                  <th className="table-th text-center">Completed</th>
+                  <th className="table-th text-center">Rating</th>
+                  <th className="table-th text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
+                {topDoctors.map((doc, i) => (
+                  <tr key={doc.doctorId} className="table-row">
+                    <td className="table-td pl-0">
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                        i === 0 ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" :
+                        i === 1 ? "bg-gray-100 text-gray-600 dark:bg-dark-border dark:text-gray-300" :
+                        i === 2 ? "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400" :
+                        "bg-gray-50 text-gray-400 dark:bg-dark-bg dark:text-dark-muted"
+                      }`}>
+                        {i === 0 ? <FiAward size={13} /> : i + 1}
+                      </span>
+                    </td>
+                    <td className="table-td">
+                      <div className="flex items-center gap-3">
+                        {doc.avatar ? (
+                          <img src={doc.avatar} alt={doc.name} className="w-9 h-9 rounded-xl object-cover shrink-0" />
+                        ) : (
+                          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                            {doc.name?.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">
+                            Dr. {doc.name}
+                          </p>
+                          <p className="text-xs text-gray-400 dark:text-dark-muted truncate">{doc.specialization}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="table-td text-gray-500 dark:text-dark-muted text-sm">{doc.department}</td>
+                    <td className="table-td text-center">
+                      <span className="font-bold text-gray-900 dark:text-white tabular-nums">{doc.total}</span>
+                    </td>
+                    <td className="table-td text-center">
+                      <span className="font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">{doc.completed}</span>
+                    </td>
+                    <td className="table-td text-center">
+                      <span className="flex items-center justify-center gap-1 text-amber-500 font-semibold text-sm">
+                        <FiStar size={12} className="fill-amber-400 stroke-amber-400" />
+                        {doc.rating > 0 ? doc.rating.toFixed(1) : "—"}
+                      </span>
+                    </td>
+                    <td className="table-td text-right">
+                      <span className={`badge ${doc.isVerified ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" : "bg-gray-100 text-gray-500 dark:bg-dark-border dark:text-dark-muted"}`}>
+                        {doc.isVerified ? "Verified" : "Pending"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-32 text-gray-400 dark:text-dark-muted text-sm">
+            No appointment data yet
+          </div>
+        )}
+      </ChartCard>
+
     </div>
   );
 };

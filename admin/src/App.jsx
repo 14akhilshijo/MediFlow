@@ -12,6 +12,7 @@ import Appointments from "./pages/Appointments.jsx";
 import Messages from "./pages/Messages.jsx";
 import Departments from "./pages/Departments.jsx";
 import Users from "./pages/Users.jsx";
+import Reports from "./pages/Reports.jsx";
 
 const PrivateRoute = ({ children }) => {
   const { admin, loading } = useAdminAuth();
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/messages" element={<Messages />} />
                 <Route path="/departments" element={<Departments />} />
                 <Route path="/users" element={<Users />} />
+                <Route path="/reports" element={<Reports />} />
               </Routes>
             </AdminLayout>
           </PrivateRoute>

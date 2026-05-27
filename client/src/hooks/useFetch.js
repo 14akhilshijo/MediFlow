@@ -1,21 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
-/**
- * Generic data-fetching hook.
- * @param {string} url - API endpoint
- * @param {Object} [options] - Axios config options
- */
 const useFetch = (url, options = {}) => {
-  const [data, setData] = useState(null);
+  const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError]     = useState(null);
+  const [tick, setTick]       = useState(0);
+
+  const refetch = useCallback(() => setTick((t) => t + 1), []);
 
   useEffect(() => {
+    if (!url) return;
     let cancelled = false;
 
     const fetchData = async () => {
       setLoading(true);
+      setError(null);
       try {
         const response = await axios.get(url, {
           withCredentials: true,
@@ -33,9 +33,9 @@ const useFetch = (url, options = {}) => {
     fetchData();
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url]);
+  }, [url, tick]);
 
-  return { data, loading, error };
+  return { data, loading, error, refetch };
 };
 
 export default useFetch;

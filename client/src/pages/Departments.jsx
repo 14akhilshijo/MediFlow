@@ -18,8 +18,8 @@ const Departments = () => {
         {data?.departments?.map((dept) => (
           <div key={dept._id} className="card hover:shadow-md transition-shadow text-center">
             <div className="text-4xl mb-3">{dept.icon || "🏥"}</div>
-            <h3 className="font-semibold text-gray-900 mb-2">{dept.name}</h3>
-            <p className="text-sm text-gray-500">{dept.description}</p>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{dept.name}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{dept.description}</p>
           </div>
         ))}
       </div>

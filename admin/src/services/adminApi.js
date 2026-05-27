@@ -1,10 +1,5 @@
 import axios from "axios";
 
-/**
- * In development, Vite proxies /api → localhost:5000 (vite.config.js).
- * In production, VITE_API_URL must be set to the deployed backend URL
- * e.g. https://mediflow-api.onrender.com
- */
 const BASE_URL = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api/v1`
   : "/api/v1";
@@ -23,10 +18,9 @@ api.interceptors.response.use(
   }
 );
 
-// ─── Doctor API ───────────────────────────────────────────────────────────────
 export const adminDoctorAPI = {
-  getAll:   (params) => api.get("/doctors", { params }),
-  getById:  (id)     => api.get(`/doctors/${id}`),
+  getAll:  (params) => api.get("/doctors", { params }),
+  getById: (id)     => api.get(`/doctors/${id}`),
   add: (data) =>
     api.post("/doctors", data, { headers: { "Content-Type": "multipart/form-data" } }),
   update: (id, data) => {
@@ -42,21 +36,20 @@ export const adminDoctorAPI = {
   getStats: ()   => api.get("/doctors/admin/stats"),
 };
 
-// ─── Appointment API ──────────────────────────────────────────────────────────
 export const adminAppointmentAPI = {
   getAll:       (params) => api.get("/appointments", { params }),
   getStats:     ()       => api.get("/appointments/stats"),
   updateStatus: (id, data) => api.patch(`/appointments/${id}/status`, data),
+  getBookedSlots: (doctorId, date) =>
+    api.get("/appointments/slots", { params: { doctorId, date } }),
 };
 
-// ─── Message API ──────────────────────────────────────────────────────────────
 export const adminMessageAPI = {
   getAll:   ()   => api.get("/messages"),
   markRead: (id) => api.patch(`/messages/${id}/read`),
   delete:   (id) => api.delete(`/messages/${id}`),
 };
 
-// ─── Department API ───────────────────────────────────────────────────────────
 export const adminDepartmentAPI = {
   getAll:  ()         => api.get("/departments"),
   create:  (data)     => api.post("/departments", data),
@@ -64,11 +57,27 @@ export const adminDepartmentAPI = {
   delete:  (id)       => api.delete(`/departments/${id}`),
 };
 
-// ─── User API ─────────────────────────────────────────────────────────────────
 export const adminUserAPI = {
   getAll:     ()   => api.get("/users"),
   deactivate: (id) => api.patch(`/users/${id}/deactivate`),
   delete:     (id) => api.delete(`/users/${id}`),
+};
+
+export const adminReportAPI = {
+  getAll:       (params) => api.get("/reports", { params }),
+  getStats:     ()       => api.get("/reports/stats"),
+  getById:      (id)     => api.get(`/reports/${id}`),
+  getByPatient: (id)     => api.get(`/reports/patient/${id}`),
+  delete:       (id)     => api.delete(`/reports/${id}`),
+};
+
+export const analyticsAPI = {
+  getOverview:        () => api.get("/analytics/overview"),
+  getMonthlyTrend:    () => api.get("/analytics/monthly"),
+  getStatusBreakdown: () => api.get("/analytics/status"),
+  getDepartments:     () => api.get("/analytics/departments"),
+  getTopDoctors:      () => api.get("/analytics/top-doctors"),
+  getPatientGrowth:   () => api.get("/analytics/patient-growth"),
 };
 
 export default api;

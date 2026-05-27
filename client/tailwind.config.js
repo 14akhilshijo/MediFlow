@@ -31,6 +31,16 @@ export default {
           500: "#f43f5e",
           600: "#e11d48",
         },
+        // Dark mode surface palette
+        dark: {
+          bg:      "#030712",   // gray-950
+          surface: "#111827",   // gray-900
+          card:    "#1f2937",   // gray-800
+          border:  "#374151",   // gray-700
+          muted:   "#6b7280",   // gray-500
+          text:    "#f9fafb",   // gray-50
+          subtle:  "#9ca3af",   // gray-400
+        },
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
@@ -46,6 +56,7 @@ export default {
         "card-lg": "0 10px 40px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.06)",
         "glow":    "0 0 20px rgba(37,99,235,0.3)",
         "glow-accent": "0 0 20px rgba(16,185,129,0.3)",
+        "dark-card": "0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3)",
       },
       animation: {
         "fade-in":    "fadeIn 0.4s ease-out",
@@ -53,6 +64,7 @@ export default {
         "slide-down": "slideDown 0.3s ease-out",
         "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "float":      "float 3s ease-in-out infinite",
+        "spin-slow":  "spin 2s linear infinite",
       },
       keyframes: {
         fadeIn:    { from: { opacity: "0" }, to: { opacity: "1" } },

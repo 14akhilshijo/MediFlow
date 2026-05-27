@@ -7,19 +7,22 @@ import {
   updateAppointmentStatus,
   cancelAppointment,
   getDashboardStats,
+  getBookedSlots,
 } from "../controllers/appointmentController.js";
 import { protect, restrictTo } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
+router.get("/slots", getBookedSlots);
+
 router.use(protect);
 
-router.post("/", restrictTo("Patient"), bookAppointment);
-router.get("/", restrictTo("Admin"), getAllAppointments);
-router.get("/my", restrictTo("Patient"), getMyAppointments);
-router.get("/doctor", restrictTo("Doctor"), getDoctorAppointments);
-router.get("/stats", restrictTo("Admin"), getDashboardStats);
+router.post("/",          restrictTo("Patient"),          bookAppointment);
+router.get("/",           restrictTo("Admin"),             getAllAppointments);
+router.get("/my",         restrictTo("Patient"),           getMyAppointments);
+router.get("/doctor",     restrictTo("Doctor"),            getDoctorAppointments);
+router.get("/stats",      restrictTo("Admin"),             getDashboardStats);
 router.patch("/:id/status", restrictTo("Admin", "Doctor"), updateAppointmentStatus);
-router.patch("/:id/cancel", restrictTo("Patient"), cancelAppointment);
+router.patch("/:id/cancel", restrictTo("Patient"),         cancelAppointment);
 
 export default router;

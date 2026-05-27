@@ -1,19 +1,13 @@
-/**
- * requestLogger – lightweight dev-only request logger.
- *
- * Logs: METHOD  /path  STATUS  Xms
- * Only active when NODE_ENV=development (gated in app.js).
- */
 export const requestLogger = (req, res, next) => {
   const start = Date.now();
 
   res.on("finish", () => {
     const duration = Date.now() - start;
     const color =
-      res.statusCode >= 500 ? "\x1b[31m"   // red
-      : res.statusCode >= 400 ? "\x1b[33m" // yellow
-      : res.statusCode >= 300 ? "\x1b[36m" // cyan
-      : "\x1b[32m";                         // green
+      res.statusCode >= 500 ? "\x1b[31m"
+      : res.statusCode >= 400 ? "\x1b[33m"
+      : res.statusCode >= 300 ? "\x1b[36m"
+      : "\x1b[32m";
     const reset = "\x1b[0m";
 
     console.log(

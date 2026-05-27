@@ -12,7 +12,20 @@
 
   body {
     @apply font-sans text-gray-800 bg-gray-50 antialiased
-           dark:bg-gray-950 dark:text-gray-100;
+           dark:bg-gray-950 dark:text-gray-100
+           transition-colors duration-300;
+  }
+
+  /* Smooth theme transitions on all elements */
+  *, *::before, *::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+
+  /* Override transition for elements that need faster/no transition */
+  .no-transition, .no-transition * {
+    transition: none !important;
   }
 
   h1, h2, h3, h4, h5, h6 { @apply font-semibold leading-tight; }
@@ -70,7 +83,7 @@
            bg-white text-gray-900 placeholder-gray-400
            focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent
            transition-all duration-200
-           dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100
+           dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100
            dark:placeholder-gray-500 dark:focus:ring-primary-400;
   }
 
@@ -125,6 +138,17 @@
     @apply bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700
            text-white py-16;
   }
+
+  /* Dark mode toggle button */
+  .theme-toggle {
+    @apply relative inline-flex items-center justify-center
+           w-10 h-10 rounded-xl
+           text-gray-500 hover:text-gray-900 hover:bg-gray-100
+           dark:text-gray-400 dark:hover:text-gray-100 dark:hover:bg-gray-800
+           transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+           dark:focus:ring-offset-gray-950;
+  }
 }
 
 /* ─── Utilities ────────────────────────────────────────────────────────────── */
@@ -133,6 +157,10 @@
 
   .animate-in {
     animation: slideUp 0.4s ease-out both;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   /* Stagger children */

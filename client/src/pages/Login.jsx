@@ -16,11 +16,16 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await login(form);
+      const data = await login(form);
       toast.success("Welcome back!");
-      navigate("/dashboard");
+      // Route to role-specific dashboard
+      if (data?.user?.role === "Doctor") {
+        navigate("/doctor/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.response?.data?.message || err.message || "Login failed.");
     } finally {
       setLoading(false);
     }
@@ -31,13 +36,13 @@ const Login = () => {
       <div className="w-full max-w-md">
         <div className="card">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
-            <p className="text-gray-500 text-sm mt-1">Sign in to your MediFlow account</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Welcome Back</h1>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Sign in to your MediFlow account</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Email Address
               </label>
               <input
@@ -52,7 +57,7 @@ const Login = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Password
               </label>
               <input
@@ -67,7 +72,7 @@ const Login = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Login As
               </label>
               <select
@@ -90,9 +95,9 @@ const Login = () => {
             </button>
           </form>
 
-          <p className="text-center text-sm text-gray-500 mt-6">
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
             Don&apos;t have an account?{" "}
-            <Link to="/register" className="text-primary-600 font-medium hover:underline">
+            <Link to="/register" className="text-primary-600 dark:text-primary-400 font-medium hover:underline">
               Register here
             </Link>
           </p>

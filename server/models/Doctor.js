@@ -1,18 +1,4 @@
-/**
- * Doctor Model
- *
- * Linked to a User document (role: "Doctor") via the `user` ref.
- * Stores all professional data: department, specialization, qualifications,
- * experience, fees, availability schedule, and rating aggregates.
- *
- * Indexes:
- *   - department + isVerified  → department-filtered listings
- *   - user (unique)            → one doctor profile per user account
- */
-
 import mongoose from "mongoose";
-
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
 
 const qualificationSchema = new mongoose.Schema(
   {
@@ -54,11 +40,8 @@ const availableSlotSchema = new mongoose.Schema(
   { _id: true }
 );
 
-// ─── Main Schema ──────────────────────────────────────────────────────────────
-
 const doctorSchema = new mongoose.Schema(
   {
-    // ── Relationships ─────────────────────────────────────────────────────────
     user: {
       type:     mongoose.Schema.Types.ObjectId,
       ref:      "User",
@@ -70,8 +53,6 @@ const doctorSchema = new mongoose.Schema(
       ref:      "Department",
       required: [true, "Department is required"],
     },
-
-    // ── Professional Details ──────────────────────────────────────────────────
     specialization: {
       type:     String,
       required: [true, "Specialization is required"],
@@ -93,8 +74,6 @@ const doctorSchema = new mongoose.Schema(
       trim:      true,
       maxLength: [600, "Bio cannot exceed 600 characters"],
     },
-
-    // ── Fees ─────────────────────────────────────────────────────────────────
     consultationFee: {
       type:     Number,
       required: [true, "Consultation fee is required"],
@@ -105,20 +84,14 @@ const doctorSchema = new mongoose.Schema(
       default: 0,
       min:     [0, "Follow-up fee cannot be negative"],
     },
-
-    // ── Availability ──────────────────────────────────────────────────────────
     availableSlots: {
       type:    [availableSlotSchema],
       default: [],
     },
-
-    // ── Rating ────────────────────────────────────────────────────────────────
     rating: {
       average: { type: Number, default: 0, min: 0, max: 5 },
       count:   { type: Number, default: 0 },
     },
-
-    // ── Status ────────────────────────────────────────────────────────────────
     isVerified: { type: Boolean, default: false },
     isAcceptingPatients: { type: Boolean, default: true },
   },
@@ -129,13 +102,9 @@ const doctorSchema = new mongoose.Schema(
   }
 );
 
-// ─── Indexes ──────────────────────────────────────────────────────────────────
 doctorSchema.index({ department: 1, isVerified: 1 });
 doctorSchema.index({ specialization: "text" });
 
-// ─── Virtuals ─────────────────────────────────────────────────────────────────
-
-/** Days the doctor is available (unique, sorted) */
 doctorSchema.virtual("availableDays").get(function () {
   const order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const days  = [...new Set(this.availableSlots.map((s) => s.day))];

@@ -1,8 +1,4 @@
-# render.yaml – One-click deploy for MediFlow on Render.com
-# Docs: https://render.com/docs/blueprint-spec
-
 services:
-  # ── Backend API ─────────────────────────────────────────────────────────────
   - type: web
     name: mediflow-api
     runtime: node
@@ -15,7 +11,7 @@ services:
       - key: PORT
         value: 5000
       - key: MONGO_URI
-        sync: false          # set manually in Render dashboard
+        sync: false
       - key: JWT_SECRET_KEY
         sync: false
       - key: JWT_EXPIRES
@@ -31,11 +27,10 @@ services:
       - key: CLOUDINARY_API_SECRET
         sync: false
       - key: FRONTEND_URL
-        sync: false          # e.g. https://mediflow-client.netlify.app
+        sync: false
       - key: ADMIN_URL
-        sync: false          # e.g. https://mediflow-admin.netlify.app
+        sync: false
 
-  # ── Patient Client ───────────────────────────────────────────────────────────
   - type: web
     name: mediflow-client
     runtime: static
@@ -48,9 +43,8 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        sync: false          # e.g. https://mediflow-api.onrender.com
+        sync: false
 
-  # ── Admin Dashboard ──────────────────────────────────────────────────────────
   - type: web
     name: mediflow-admin
     runtime: static
@@ -63,4 +57,4 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        sync: false          # e.g. https://mediflow-api.onrender.com
+        sync: false

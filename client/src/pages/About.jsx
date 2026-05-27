@@ -5,16 +5,16 @@ const About = () => (
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
       <div className="card">
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">Our Mission</h3>
-        <p className="text-gray-600 text-sm leading-relaxed">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Our Mission</h3>
+        <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
           MediFlow is dedicated to making quality healthcare accessible to everyone. We connect
           patients with experienced doctors across all specialties, enabling seamless appointment
           booking, digital health records, and real-time consultations.
         </p>
       </div>
       <div className="card">
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">Our Vision</h3>
-        <p className="text-gray-600 text-sm leading-relaxed">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Our Vision</h3>
+        <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
           We envision a world where geography and logistics never stand between a patient and
           the care they need. Through technology, we're building the future of smart, connected
           healthcare management.

@@ -16,7 +16,14 @@ import Dashboard from "./pages/patient/Dashboard.jsx";
 import BookAppointment from "./pages/patient/BookAppointment.jsx";
 import MyAppointments from "./pages/patient/MyAppointments.jsx";
 import Profile from "./pages/patient/Profile.jsx";
+import MyReports from "./pages/patient/MyReports.jsx";
 import NotFound from "./pages/NotFound.jsx";
+
+// Doctor Pages
+import DoctorDashboard    from "./pages/doctor/Dashboard.jsx";
+import DoctorAppointments from "./pages/doctor/Appointments.jsx";
+import DoctorSchedule     from "./pages/doctor/Schedule.jsx";
+import DoctorProfile      from "./pages/doctor/Profile.jsx";
 
 function App() {
   return (
@@ -39,7 +46,16 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/book-appointment" element={<BookAppointment />} />
             <Route path="/my-appointments" element={<MyAppointments />} />
+            <Route path="/my-reports" element={<MyReports />} />
             <Route path="/profile" element={<Profile />} />
+          </Route>
+
+          {/* Protected Doctor Routes */}
+          <Route element={<ProtectedRoute role="Doctor" />}>
+            <Route path="/doctor/dashboard"    element={<DoctorDashboard />} />
+            <Route path="/doctor/appointments" element={<DoctorAppointments />} />
+            <Route path="/doctor/schedule"     element={<DoctorSchedule />} />
+            <Route path="/doctor/profile"      element={<DoctorProfile />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

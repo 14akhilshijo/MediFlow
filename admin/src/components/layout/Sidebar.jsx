@@ -2,7 +2,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import {
   FiGrid, FiUsers, FiCalendar, FiMessageSquare,
   FiLayers, FiUserPlus, FiLogOut, FiActivity,
-  FiChevronRight,
+  FiChevronRight, FiFolder,
 } from "react-icons/fi";
 import { useAdminAuth } from "../../context/AdminAuthContext.jsx";
 import toast from "react-hot-toast";
@@ -29,6 +29,7 @@ const navGroups = [
     items: [
       { label: "Departments",  to: "/departments",  icon: FiLayers },
       { label: "Messages",     to: "/messages",     icon: FiMessageSquare },
+      { label: "Reports",      to: "/reports",      icon: FiFolder },
     ],
   },
 ];

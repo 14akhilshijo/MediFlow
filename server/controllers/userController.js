@@ -4,7 +4,6 @@ import { APIFeatures } from "../utils/apiFeatures.js";
 import { uploadToCloudinary, deleteFromCloudinary } from "../config/cloudinary.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 
-// ─── Get All Users (Admin) ────────────────────────────────────────────────────
 export const getAllUsers = asyncHandler(async (req, res) => {
   const features = new APIFeatures(User.find(), req.query)
     .filter()
@@ -18,14 +17,12 @@ export const getAllUsers = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, total, count: users.length, users });
 });
 
-// ─── Get Single User ──────────────────────────────────────────────────────────
 export const getUserById = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
   if (!user) return next(new AppError("User not found.", 404));
   res.status(200).json({ success: true, user });
 });
 
-// ─── Update Profile ───────────────────────────────────────────────────────────
 export const updateProfile = asyncHandler(async (req, res, next) => {
   const allowedFields = ["firstName", "lastName", "phone", "gender", "dob"];
   const updates = {};
@@ -33,7 +30,6 @@ export const updateProfile = asyncHandler(async (req, res, next) => {
     if (req.body[field] !== undefined) updates[field] = req.body[field];
   });
 
-  // Handle avatar upload
   if (req.files?.avatar) {
     const user = await User.findById(req.user._id);
     if (user.avatar?.public_id) {
@@ -54,7 +50,6 @@ export const updateProfile = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, message: "Profile updated.", user });
 });
 
-// ─── Deactivate User (Admin) ──────────────────────────────────────────────────
 export const deactivateUser = asyncHandler(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(
     req.params.id,
@@ -65,7 +60,6 @@ export const deactivateUser = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, message: "User deactivated.", user });
 });
 
-// ─── Delete User (Admin) ──────────────────────────────────────────────────────
 export const deleteUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
   if (!user) return next(new AppError("User not found.", 404));

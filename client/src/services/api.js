@@ -1,10 +1,5 @@
 import axios from "axios";
 
-/**
- * In development, Vite proxies /api → localhost:5000 (vite.config.js).
- * In production, VITE_API_URL must be set to the deployed backend URL
- * e.g. https://mediflow-api.onrender.com
- */
 const BASE_URL = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api/v1`
   : "/api/v1";
@@ -15,7 +10,6 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-// Response interceptor – extract error messages
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -25,7 +19,6 @@ api.interceptors.response.use(
   }
 );
 
-// ─── Auth ─────────────────────────────────────────────────────────────────────
 export const authAPI = {
   register:       (data) => api.post("/auth/register/patient", data),
   login:          (data) => api.post("/auth/login", data),
@@ -34,27 +27,42 @@ export const authAPI = {
   updatePassword: (data) => api.patch("/auth/update-password", data),
 };
 
-// ─── Doctors ──────────────────────────────────────────────────────────────────
 export const doctorAPI = {
-  getAll:  (params) => api.get("/doctors", { params }),
-  getById: (id)     => api.get(`/doctors/${id}`),
+  getAll:       (params) => api.get("/doctors", { params }),
+  getById:      (id)     => api.get(`/doctors/${id}`),
+  getMyProfile: ()       => api.get("/doctors/my-profile"),
+  update:       (id, data) => api.patch(`/doctors/${id}`, data),
+  updateAvailability: (id, slots) =>
+    api.patch(`/doctors/${id}/availability`, { availableSlots: slots }),
 };
 
-// ─── Appointments ─────────────────────────────────────────────────────────────
 export const appointmentAPI = {
-  book:   (data) => api.post("/appointments", data),
-  getMine: ()    => api.get("/appointments/my"),
-  cancel: (id)   => api.patch(`/appointments/${id}/cancel`),
+  book:           (data)           => api.post("/appointments", data),
+  getMine:        ()               => api.get("/appointments/my"),
+  getDoctorAppts: ()               => api.get("/appointments/doctor"),
+  cancel:         (id)             => api.patch(`/appointments/${id}/cancel`),
+  updateStatus:   (id, data)       => api.patch(`/appointments/${id}/status`, data),
+  getBookedSlots: (doctorId, date) =>
+    api.get("/appointments/slots", { params: { doctorId, date } }),
 };
 
-// ─── Departments ──────────────────────────────────────────────────────────────
 export const departmentAPI = {
   getAll: () => api.get("/departments"),
 };
 
-// ─── Messages ─────────────────────────────────────────────────────────────────
 export const messageAPI = {
   send: (data) => api.post("/messages", data),
+};
+
+export const reportAPI = {
+  upload:  (formData, onUploadProgress) =>
+    api.post("/reports", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      onUploadProgress,
+    }),
+  getMine: (params) => api.get("/reports/my", { params }),
+  getById: (id)     => api.get(`/reports/${id}`),
+  delete:  (id)     => api.delete(`/reports/${id}`),
 };
 
 export default api;

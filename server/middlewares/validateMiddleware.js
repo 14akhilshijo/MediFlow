@@ -1,19 +1,6 @@
-/**
- * Validation Middleware
- *
- * validate          – Checks express-validator results, throws 400 on failure
- * validationRules   – Pre-built rule sets for auth endpoints
- * doctorValidation  – Rule sets for doctor CRUD endpoints
- */
-
 import { body, validationResult } from "express-validator";
 import { AppError } from "../utils/AppError.js";
 
-// ─── Result Checker ───────────────────────────────────────────────────────────
-/**
- * Run after a validation chain. Collects all errors and throws a single
- * 400 AppError with all messages joined.
- */
 export const validate = (req, _res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -26,7 +13,6 @@ export const validate = (req, _res, next) => {
   next();
 };
 
-// ─── Reusable Field Rules ─────────────────────────────────────────────────────
 const nameRule = (field) =>
   body(field)
     .trim()
@@ -76,7 +62,6 @@ const roleRule = () =>
     .notEmpty().withMessage("Role is required")
     .isIn(["Patient", "Doctor", "Admin"]).withMessage("Role must be Patient, Doctor, or Admin");
 
-// ─── Auth Validation Rule Sets ────────────────────────────────────────────────
 export const validationRules = {
   registerPatient: [
     nameRule("firstName"),
@@ -151,9 +136,6 @@ export const validationRules = {
   ],
 };
 
-// ─── Doctor Validation Rule Sets ──────────────────────────────────────────────
-
-/** Shared professional field rules */
 const doctorProfessionalRules = [
   body("department")
     .optional()
@@ -197,7 +179,6 @@ const doctorProfessionalRules = [
 ];
 
 export const doctorValidation = {
-  /** POST /doctors – Add new doctor */
   add: [
     nameRule("firstName"),
     nameRule("lastName"),
@@ -235,7 +216,6 @@ export const doctorValidation = {
       .isLength({ max: 600 }).withMessage("Bio cannot exceed 600 characters"),
   ],
 
-  /** PATCH /doctors/:id – Update doctor */
   update: [
     ...doctorProfessionalRules,
     body("firstName")
@@ -255,7 +235,6 @@ export const doctorValidation = {
       .isISO8601().withMessage("Date of birth must be a valid date"),
   ],
 
-  /** PATCH /doctors/:id/availability – Update schedule */
   availability: [
     body("availableSlots")
       .notEmpty().withMessage("availableSlots is required"),
