@@ -16,6 +16,7 @@ import departmentRouter from "./routes/departmentRoutes.js";
 import reportRouter        from "./routes/reportRoutes.js";
 import analyticsRouter     from "./routes/analyticsRoutes.js";
 import notificationRouter  from "./routes/notificationRoutes.js";
+import publicRouter        from "./routes/publicRoutes.js";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -71,6 +72,7 @@ app.use(`${API}/departments`,  departmentRouter);
 app.use(`${API}/reports`,        reportRouter);
 app.use(`${API}/analytics`,      analyticsRouter);
 app.use(`${API}/notifications`,  notificationRouter);
+app.use(`${API}/public`,         publicRouter);
 
 app.use((_req, res) => {
   res.status(404).json({

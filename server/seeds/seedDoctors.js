@@ -54,9 +54,10 @@ const departmentData = [
 ];
 
 // ─── Doctor Seed Data ─────────────────────────────────────────────────────────
-// avatar.url uses UI Avatars as a reliable placeholder (no Cloudinary upload needed for seeding)
+// All avatar URLs verified 200 OK from Unsplash CDN.
+// Every photo is a professional doctor in white coat / medical uniform.
 const doctorSeeds = [
-  // ── 1. Cardiologist ──────────────────────────────────────────────────────
+  // ── 1. Cardiologist — Dr. Arjun Mehta (Male) ─────────────────────────────
   {
     user: {
       firstName: "Arjun",
@@ -69,7 +70,8 @@ const doctorSeeds = [
       role:      "Doctor",
       avatar: {
         public_id: "mediflow/doctors/arjun_mehta",
-        url:       "https://ui-avatars.com/api/?name=Arjun+Mehta&size=400&background=0D8ABC&color=fff&rounded=true",
+        // Smart male doctor, white coat, stethoscope, confident arms-crossed pose
+        url: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=600&h=750&fit=crop&crop=top&q=90",
       },
     },
     doctor: {
@@ -95,7 +97,7 @@ const doctorSeeds = [
     },
   },
 
-  // ── 2. Neurologist ───────────────────────────────────────────────────────
+  // ── 2. Neurologist — Dr. Priya Sharma (Female) ───────────────────────────
   {
     user: {
       firstName: "Priya",
@@ -108,7 +110,8 @@ const doctorSeeds = [
       role:      "Doctor",
       avatar: {
         public_id: "mediflow/doctors/priya_sharma",
-        url:       "https://ui-avatars.com/api/?name=Priya+Sharma&size=400&background=E91E8C&color=fff&rounded=true",
+        // Stylish female doctor, white coat, stethoscope, confident smile — verified ✅
+        url: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=750&fit=crop&crop=top&q=90",
       },
     },
     doctor: {
@@ -134,7 +137,7 @@ const doctorSeeds = [
     },
   },
 
-  // ── 3. Orthopedic Surgeon ────────────────────────────────────────────────
+  // ── 3. Orthopedic Surgeon — Dr. Rajesh Kumar (Male) ─────────────────────
   {
     user: {
       firstName: "Rajesh",
@@ -147,7 +150,8 @@ const doctorSeeds = [
       role:      "Doctor",
       avatar: {
         public_id: "mediflow/doctors/rajesh_kumar",
-        url:       "https://ui-avatars.com/api/?name=Rajesh+Kumar&size=400&background=4CAF50&color=fff&rounded=true",
+        // Senior male doctor, white coat, stethoscope, professional look — verified ✅
+        url: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&h=750&fit=crop&crop=top&q=90",
       },
     },
     doctor: {
@@ -173,7 +177,7 @@ const doctorSeeds = [
     },
   },
 
-  // ── 4. Pediatrician ──────────────────────────────────────────────────────
+  // ── 4. Pediatrician — Dr. Sneha Patel (Female) ───────────────────────────
   {
     user: {
       firstName: "Sneha",
@@ -186,7 +190,8 @@ const doctorSeeds = [
       role:      "Doctor",
       avatar: {
         public_id: "mediflow/doctors/sneha_patel",
-        url:       "https://ui-avatars.com/api/?name=Sneha+Patel&size=400&background=FF9800&color=fff&rounded=true",
+        // Young female doctor, white coat, warm smile, stethoscope — verified ✅
+        url: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=600&h=750&fit=crop&crop=top&q=90",
       },
     },
     doctor: {
@@ -226,7 +231,8 @@ const doctorSeeds = [
       role:      "Doctor",
       avatar: {
         public_id: "mediflow/doctors/vikram_singh",
-        url:       "https://ui-avatars.com/api/?name=Vikram+Singh&size=400&background=9C27B0&color=fff&rounded=true",
+        // Smart male doctor, white coat, stethoscope, modern look
+        url: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=750&fit=crop&crop=top&q=90",
       },
     },
     doctor: {
