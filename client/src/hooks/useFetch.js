@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import api from "../services/api";
 
 const useFetch = (url, options = {}) => {
   const [data, setData]       = useState(null);
@@ -17,14 +17,13 @@ const useFetch = (url, options = {}) => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(url, {
-          withCredentials: true,
-          ...options,
-        });
+        // Strip the /api/v1 prefix since the api instance already has it as baseURL
+        const path = url.replace(/^\/api\/v1/, "");
+        const response = await api.get(path, options);
         if (!cancelled) setData(response.data);
       } catch (err) {
         if (!cancelled)
-          setError(err.response?.data?.message || "Something went wrong.");
+          setError(err.response?.data?.message || err.message || "Something went wrong.");
       } finally {
         if (!cancelled) setLoading(false);
       }
