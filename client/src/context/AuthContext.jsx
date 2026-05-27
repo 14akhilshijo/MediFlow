@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import { authAPI } from "../services/api";
 
 const AuthContext = createContext(null);
 
@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = useCallback(async () => {
     try {
-      const { data } = await axios.get("/api/v1/auth/me", { withCredentials: true });
+      const { data } = await authAPI.getMe();
       setUser(data.user);
     } catch {
       setUser(null);
@@ -21,23 +21,22 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => { fetchUser(); }, [fetchUser]);
 
   const login = async (credentials) => {
-    const { data } = await axios.post("/api/v1/auth/login", credentials, {
-      withCredentials: true,
-    });
+    const { data } = await authAPI.login(credentials);
+    if (data.token) localStorage.setItem("token", data.token);
     setUser(data.user);
     return data;
   };
 
   const register = async (formData) => {
-    const { data } = await axios.post("/api/v1/auth/register/patient", formData, {
-      withCredentials: true,
-    });
+    const { data } = await authAPI.register(formData);
+    if (data.token) localStorage.setItem("token", data.token);
     setUser(data.user);
     return data;
   };
 
   const logout = async () => {
-    await axios.get("/api/v1/auth/logout", { withCredentials: true });
+    await authAPI.logout();
+    localStorage.removeItem("token");
     setUser(null);
   };
 

@@ -456,5 +456,5 @@ This project is licensed under the [MIT License](LICENSE).
 ---
 
 <div align="center">
-  Built with ❤️ by <a href="https://github.com/your-username">Your Name</a>
+  Built with ❤️ by <a href="https://github.com/your-username">Akhil Shijo</a>
 </div>

@@ -31,12 +31,14 @@ export const AdminAuthProvider = ({ children }) => {
       role: "Admin",
     });
     if (data.user?.role !== "Admin") throw new Error("Access denied. Admins only.");
+    if (data.token) localStorage.setItem("adminToken", data.token);
     setAdmin(data.user);
     return data;
   };
 
   const logout = async () => {
     await api.get("/auth/logout");
+    localStorage.removeItem("adminToken");
     setAdmin(null);
   };
 
