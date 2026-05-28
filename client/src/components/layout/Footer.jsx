@@ -43,15 +43,15 @@ const Footer = () => (
           <ul className="space-y-3 text-sm text-gray-300">
             <li className="flex items-center gap-2">
               <FiPhone size={14} className="text-accent-400 shrink-0" />
-              +1 (800) 123-4567
+              +91 8137864105
             </li>
             <li className="flex items-center gap-2">
               <FiMail size={14} className="text-accent-400 shrink-0" />
-              support@mediflow.com
+              mrakhilshijo@gmail.com
             </li>
             <li className="flex items-start gap-2">
               <FiMapPin size={14} className="text-accent-400 shrink-0 mt-0.5" />
-              123 Health Ave, Medical City, MC 45678
+              Kerala, India
             </li>
           </ul>
         </div>

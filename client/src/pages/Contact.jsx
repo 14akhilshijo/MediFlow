@@ -37,9 +37,9 @@ const Contact = () => {
         {/* Info */}
         <div className="space-y-6">
           {[
-            { icon: FiPhone, title: "Phone", detail: "+1 (800) 123-4567" },
-            { icon: FiMail, title: "Email", detail: "support@mediflow.com" },
-            { icon: FiMapPin, title: "Address", detail: "123 Health Ave, Medical City, MC 45678" },
+            { icon: FiPhone, title: "Phone", detail: "+91 8137864105" },
+            { icon: FiMail, title: "Email", detail: "mrakhilshijo@gmail.com" },
+            { icon: FiMapPin, title: "Address", detail: "Kerala, India" },
           ].map(({ icon: Icon, title, detail }) => (
             <div key={title} className="card flex items-start gap-4">
               <div className="bg-primary-50 dark:bg-primary-900/30 p-3 rounded-lg">
